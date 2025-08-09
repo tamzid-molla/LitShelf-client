@@ -1,7 +1,6 @@
 import axios from "axios";
-import React from "react";
-import { useContext } from "react";
-import { FaBook, FaUser, FaEnvelope, FaHeart } from "react-icons/fa";
+import { useContext, useState } from "react";
+import { FaBook, } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { AuthContext } from "../context/FirebaseContext";
 import { useEffect } from "react";
