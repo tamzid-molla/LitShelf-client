@@ -1,9 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useContext, useState } from "react";
 import { FaHeart, FaStar, } from "react-icons/fa";
-import { Link, useLoaderData, useParams, } from "react-router";
+import { Link, useParams, } from "react-router";
 import { AuthContext } from "../context/FirebaseContext";
-import axios from "axios";
 import Rating from "../components/bookDetails/Rating";
 import Swal from "sweetalert2";
 import { RateContext } from "../context/RatingContext";
@@ -264,16 +263,16 @@ const BookDetails = () => {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span
                       key={star}
-                      className={`cursor-pointer inline-block text-xl ${
+                      className={`inline-block text-xl ${
                         rating >= star ? "text-orange-300" : "text-gray-400"
-                      }`}
+                      } ${handleTextarea ? 'pointer-events-none': 'cursor-pointer'}`}
                       onClick={() => setRating(star)}>
                       <FaStar />
                     </span>
                   ))}
                 </div>
                 <textarea
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-InputRing focus:border-InputRing"
+                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-InputRing focus:border-InputRing ${handleTextarea && 'cursor-not-allowed'}`}
                   rows="4"
                   name="review"
                   disabled={handleTextarea ? true : false}
