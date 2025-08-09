@@ -11,34 +11,48 @@ import Swal from "sweetalert2";
 
 const NavBar = () => {
   //User Information from firebase Context
-    const { user, logOutUser } = useContext(AuthContext);
-    //Hamburger menu for mobile device 
-    const [menuOpen, setMenuOpen] = useState(false);
-    //Dark mode state from ThemContext
-    const { darkMode, setDarkMode,toggleDarkMode  } = useContext(ThemContext);
-    //Navigate variable 
-    const navigate = useNavigate();
-    
-    //Log out function
-    const handleLogout = () => {
+  const { user, logOutUser } = useContext(AuthContext);
+  //Hamburger menu for mobile device
+  const [menuOpen, setMenuOpen] = useState(false);
+  //Dark mode state from ThemContext
+  const { darkMode, toggleDarkMode } = useContext(ThemContext);
+  //Navigate variable
+  const navigate = useNavigate();
+
+  //Log out function
+  const handleLogout = () => {
     logOutUser().then(() => {
       Swal.fire({
-                      icon: "success",
-                      title: "LogOut successful",
-                      showConfirmButton: false,
-                      timer: 1500
-                            });
-                               navigate('/')
-    })
-  }
+        icon: "success",
+        title: "LogOut successful",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      navigate("/");
+    });
+  };
 
   const links = (
     <>
-      <NavLink to="/" className="underline-offset-4">Home</NavLink>
-      <NavLink to="/bookShelf" className="underline-offset-4">Bookshelf</NavLink>
-      <NavLink to="/addBook" className="underline-offset-4">Add Book</NavLink>
-      <NavLink to="/myBooks" className="underline-offset-4">My Books</NavLink>
-      <NavLink to="/profile" className="underline-offset-4">Profile</NavLink>
+      <NavLink to="/" className="underline-offset-4">
+        Home
+      </NavLink>
+      <NavLink to="/bookShelf" className="underline-offset-4">
+        Bookshelf
+      </NavLink>
+      {user && (
+        <>
+          <NavLink to="/addBook" className="underline-offset-4">
+            Add Book
+          </NavLink>
+          <NavLink to="/myBooks" className="underline-offset-4">
+            My Books
+          </NavLink>
+          <NavLink to="/profile" className="underline-offset-4">
+            Profile
+          </NavLink>
+        </>
+      )}
     </>
   );
   return (
@@ -52,23 +66,17 @@ const NavBar = () => {
             <h2 className="text-3xl font-bold">LitShelf</h2>
           </div>
           {/* Links  */}
-          <div className="hidden text-lg lg:flex gap-5 xl:gap-8 items-center">
-            {links}
-          </div>
+          <div className="hidden text-lg lg:flex gap-5 xl:gap-8 items-center">{links}</div>
           {/* Login , Register and Toggle theme*/}
           <div className="flex gap-7 items-center">
-            <button
-              onClick={toggleDarkMode}
-              className="cursor-pointer">
-              {darkMode ? (
-                <MdDarkMode size={30}></MdDarkMode>
-              ) : (
-                <MdLightMode size={30}></MdLightMode>
-              )}
+            <button onClick={toggleDarkMode} className="cursor-pointer">
+              {darkMode ? <MdDarkMode size={30}></MdDarkMode> : <MdLightMode size={30}></MdLightMode>}
             </button>
             <div className="hidden lg:flex gap-7">
               {user ? (
-                <button onClick={handleLogout} className="bg-bgBtn hover:bg-hoverBtn text-textBtn cursor-pointer px-5 py-1 text-lg font-semibold rounded-md">
+                <button
+                  onClick={handleLogout}
+                  className="bg-bgBtn hover:bg-hoverBtn text-textBtn cursor-pointer px-5 py-1 text-lg font-semibold rounded-md">
                   Logout
                 </button>
               ) : (
@@ -88,15 +96,11 @@ const NavBar = () => {
             </div>
             {/* Hamburger menu  */}
             <div className="lg:hidden">
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="cursor-pointer">
+              <button onClick={() => setMenuOpen(!menuOpen)} className="cursor-pointer">
                 {menuOpen ? (
                   <IoMdClose className="dark:text-white" size={30}></IoMdClose>
                 ) : (
-                  <GiHamburgerMenu
-                    className="dark:text-white"
-                    size={30}></GiHamburgerMenu>
+                  <GiHamburgerMenu className="dark:text-white" size={30}></GiHamburgerMenu>
                 )}
               </button>
             </div>
@@ -121,7 +125,9 @@ const NavBar = () => {
         {/* Login and Register */}
         <div className="flex flex-col gap-3">
           {user ? (
-            <button onClick={handleLogout} className="bg-bgBtn text-textBtn cursor-pointer px-5 py-1 text-lg font-semibold rounded-md">
+            <button
+              onClick={handleLogout}
+              className="bg-bgBtn text-textBtn cursor-pointer px-5 py-1 text-lg font-semibold rounded-md">
               Logout
             </button>
           ) : (
