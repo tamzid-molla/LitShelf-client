@@ -34,21 +34,21 @@ const NavBar = () => {
 
   const links = (
     <>
-      <NavLink to="/" className="underline-offset-4">
+      <NavLink to="/" className=" hover:text-InputRing underline-offset-4">
         Home
       </NavLink>
-      <NavLink to="/bookShelf" className="underline-offset-4">
+      <NavLink to="/bookShelf" className=" hover:text-InputRing underline-offset-4">
         Bookshelf
       </NavLink>
       {user && (
         <>
-          <NavLink to="/addBook" className="underline-offset-4">
+          <NavLink to="/addBook" className=" hover:text-InputRing underline-offset-4">
             Add Book
           </NavLink>
-          <NavLink to="/myBooks" className="underline-offset-4">
+          <NavLink to="/myBooks" className=" hover:text-InputRing underline-offset-4">
             My Books
           </NavLink>
-          <NavLink to="/profile" className="underline-offset-4">
+          <NavLink to="/profile" className=" hover:text-InputRing underline-offset-4">
             Profile
           </NavLink>
         </>
