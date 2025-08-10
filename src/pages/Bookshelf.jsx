@@ -60,7 +60,7 @@ const Bookshelf = () => {
             <select
               defaultValue=""
               onChange={(e) => handleFilter(e.target.value)}
-              className="w-full md:w-[180px] px-3 py-2 rounded-md bg-base-secondary dark:bg-darkBase-secondary text-gray-700 dark:text-gray-200 border">
+              className="w-[180px] px-3 py-2 rounded-md bg-base-secondary dark:bg-darkBase-secondary text-gray-700 dark:text-gray-200 border">
               <option value="" disabled>
                 Filter by Status
               </option>
