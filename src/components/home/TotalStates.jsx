@@ -9,7 +9,7 @@ const TotalStates = ({ allReview, allBook, allUser }) => {
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 max-w-6xl mx-auto">
         {/* Users Card */}
-        <div className="relative bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-transform duration-300 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-6 text-white shadow-lg transform hover:scale-103 transition-transform duration-300 overflow-hidden">
           <div className="absolute inset-0 bg-opacity-30 bg-black rounded-2xl" style={{ backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(255,255,255,0.2) 0%, transparent 50%)' }}></div>
           <div className="relative flex items-center space-x-4">
             <div className="bg-white bg-opacity-20 p-3 rounded-full">
@@ -28,7 +28,7 @@ const TotalStates = ({ allReview, allBook, allUser }) => {
         </div>
 
         {/* Books Card */}
-        <div className="relative bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-transform duration-300 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl p-6 text-white shadow-lg transform hover:scale-103 transition-transform duration-300 overflow-hidden">
           <div className="absolute inset-0 bg-opacity-30 bg-black rounded-2xl" style={{ backgroundImage: 'radial-gradient(circle at 90% 20%, rgba(255,255,255,0.2) 0%, transparent 50%)' }}></div>
           <div className="relative flex items-center space-x-4">
             <div className="bg-white bg-opacity-20 p-3 rounded-full">
@@ -47,7 +47,7 @@ const TotalStates = ({ allReview, allBook, allUser }) => {
         </div>
 
         {/* Reviews Card */}
-        <div className="relative bg-gradient-to-br from-green-600 to-green-800 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-transform duration-300 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-green-600 to-green-800 rounded-2xl p-6 text-white shadow-lg transform hover:scale-103 transition-transform duration-300 overflow-hidden">
           <div className="absolute inset-0 bg-opacity-30 bg-black rounded-2xl" style={{ backgroundImage: 'radial-gradient(circle at 50% 80%, rgba(255,255,255,0.2) 0%, transparent 50%)' }}></div>
           <div className="relative flex items-center space-x-4">
             <div className="bg-white bg-opacity-20 p-3 rounded-full">
