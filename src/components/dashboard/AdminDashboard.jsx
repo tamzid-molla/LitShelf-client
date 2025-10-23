@@ -6,18 +6,20 @@ import {
   FaStar, 
   FaChartLine, 
   FaUserShield,
-  FaBookOpen,
-  FaTachometerAlt,
-  FaCog,
-  FaSignOutAlt,
-  FaBars,
-  FaTimes
+  FaTachometerAlt
 } from "react-icons/fa";
 import axios from "axios";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import CountUp from "react-countup";
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { Pie, Bar } from 'react-chartjs-2';
+
+// Import small components
+import StatsCard from "./StatsCard";
+import DashboardSidebar from "./DashboardSidebar";
+import MobileMenuButton from "./MobileMenuButton";
+import DashboardHeader from "./DashboardHeader";
+import ChartCard from "./ChartCard";
+import BookCard from "./BookCard";
+import UserTable from "./UserTable";
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -126,56 +128,22 @@ const AdminDashboard = ({ userData }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-base dark:bg-darkBase pt-24 pb-10">
+    <div className="min-h-screen bg-base dark:bg-darkBase pt-20 pb-10">
       <div className="flex">
         {/* Sidebar */}
         <motion.aside
           initial={{ x: -300 }}
           animate={{ x: sidebarOpen || window.innerWidth >= 1024 ? 0 : -300 }}
-          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white dark:bg-darkBase-secondary shadow-2xl transform transition-transform duration-300 ease-in-out pt-24 lg:pt-24`}
+          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white dark:bg-darkBase-secondary shadow-2xl transform transition-transform duration-300 ease-in-out pt-20 lg:pt-20`}
         >
-          <div className="flex flex-col h-full">
-            {/* Profile Section */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <img
-                    src={userData?.photoURL || "https://via.placeholder.com/150"}
-                    alt={userData?.name}
-                    className="w-16 h-16 rounded-full object-cover ring-4 ring-bgBtn"
-                  />
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-darkBase-secondary"></div>
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 dark:text-white">{userData?.name}</h3>
-                  <p className="text-xs text-bgBtn font-semibold uppercase flex items-center gap-1">
-                    <FaUserShield /> Admin
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Navigation */}
-            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id);
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                    activeTab === item.id
-                      ? "bg-gradient-to-r from-bgBtn to-bgBtn/80 text-white shadow-lg"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  }`}
-                >
-                  <item.icon className="text-xl" />
-                  <span className="font-semibold">{item.label}</span>
-                </button>
-              ))}
-            </nav>
-          </div>
+          <DashboardSidebar
+            userData={userData}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setSidebarOpen={setSidebarOpen}
+            menuItems={menuItems}
+            userRole="Admin"
+          />
         </motion.aside>
 
         {/* Mobile Overlay */}
@@ -188,23 +156,12 @@ const AdminDashboard = ({ userData }) => {
 
         {/* Main Content */}
         <main className="flex-1 px-4 lg:px-8">
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden fixed bottom-6 right-6 z-50 bg-bgBtn text-white p-4 rounded-full shadow-2xl hover:bg-hoverBtn transition-all"
-          >
-            {sidebarOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-          </button>
+          <MobileMenuButton sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-2">
-              Admin Dashboard
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Manage your LitShelf platform
-            </p>
-          </div>
+          <DashboardHeader 
+            title="Admin Dashboard" 
+            subtitle="Manage your LitShelf platform" 
+          />
 
           {/* Overview Tab */}
           {activeTab === "overview" && (
@@ -215,85 +172,44 @@ const AdminDashboard = ({ userData }) => {
             >
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Total Users */}
-                <div className="relative bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl p-6 text-white shadow-xl overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                  <div className="relative flex items-center justify-between">
-                    <div>
-                      <p className="text-blue-100 text-sm font-medium mb-1">Total Users</p>
-                      <h3 className="text-4xl font-black">
-                        <CountUp end={stats.totalUsers} duration={2} />
-                      </h3>
-                    </div>
-                    <div className="bg-white/20 p-4 rounded-xl">
-                      <FaUsers className="text-4xl" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Total Books */}
-                <div className="relative bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl p-6 text-white shadow-xl overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                  <div className="relative flex items-center justify-between">
-                    <div>
-                      <p className="text-purple-100 text-sm font-medium mb-1">Total Books</p>
-                      <h3 className="text-4xl font-black">
-                        <CountUp end={stats.totalBooks} duration={2} />
-                      </h3>
-                    </div>
-                    <div className="bg-white/20 p-4 rounded-xl">
-                      <FaBook className="text-4xl" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Total Reviews */}
-                <div className="relative bg-gradient-to-br from-green-500 to-green-700 rounded-2xl p-6 text-white shadow-xl overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                  <div className="relative flex items-center justify-between">
-                    <div>
-                      <p className="text-green-100 text-sm font-medium mb-1">Total Reviews</p>
-                      <h3 className="text-4xl font-black">
-                        <CountUp end={stats.totalReviews} duration={2} />
-                      </h3>
-                    </div>
-                    <div className="bg-white/20 p-4 rounded-xl">
-                      <FaStar className="text-4xl" />
-                    </div>
-                  </div>
-                </div>
+                <StatsCard
+                  title="Total Users"
+                  value={stats.totalUsers}
+                  icon={FaUsers}
+                  gradient="from-blue-500 to-blue-700"
+                />
+                <StatsCard
+                  title="Total Books"
+                  value={stats.totalBooks}
+                  icon={FaBook}
+                  gradient="from-purple-500 to-purple-700"
+                />
+                <StatsCard
+                  title="Total Reviews"
+                  value={stats.totalReviews}
+                  icon={FaStar}
+                  gradient="from-green-500 to-green-700"
+                />
               </div>
 
               {/* Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white dark:bg-darkBase-secondary rounded-2xl p-6 shadow-lg">
-                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                    Books by Category
-                  </h3>
-                  <div className="h-64">
-                    <Pie data={categoryChartData} options={{ maintainAspectRatio: false, responsive: true }} />
-                  </div>
-                </div>
-
-                <div className="bg-white dark:bg-darkBase-secondary rounded-2xl p-6 shadow-lg">
-                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                    Users by Role
-                  </h3>
-                  <div className="h-64">
-                    <Bar 
-                      data={userRoleData} 
-                      options={{ 
-                        maintainAspectRatio: false, 
-                        responsive: true,
-                        plugins: {
-                          legend: {
-                            display: false
-                          }
-                        }
-                      }} 
-                    />
-                  </div>
-                </div>
+                <ChartCard
+                  title="Books by Category"
+                  type="pie"
+                  data={categoryChartData}
+                  options={{ maintainAspectRatio: false, responsive: true }}
+                />
+                <ChartCard
+                  title="Users by Role"
+                  type="bar"
+                  data={userRoleData}
+                  options={{
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                  }}
+                />
               </div>
 
               {/* Recent Activity */}
@@ -337,71 +253,11 @@ const AdminDashboard = ({ userData }) => {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">User Management</h2>
                 <p className="text-gray-600 dark:text-gray-400 mt-1">Manage user roles and permissions</p>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 dark:bg-gray-800">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        User
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        Email
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        Role
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {allUsers.map((user) => (
-                      <tr key={user._id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <img
-                              src={user.photoURL || "https://via.placeholder.com/40"}
-                              alt={user.name}
-                              className="w-10 h-10 rounded-full object-cover"
-                            />
-                            <div className="ml-4">
-                              <div className="text-sm font-semibold text-gray-900 dark:text-white">{user.name}</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-600 dark:text-gray-400">{user.email}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-3 py-1 text-xs font-bold rounded-full ${
-                            user.role === 'admin' 
-                              ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' 
-                              : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                          }`}>
-                            {user.role || 'user'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          {user.email !== userData.email && (
-                            <select
-                              value={user.role || 'user'}
-                              onChange={(e) => handleRoleChange(user.email, e.target.value)}
-                              className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-bgBtn"
-                            >
-                              <option value="user">User</option>
-                              <option value="admin">Admin</option>
-                            </select>
-                          )}
-                          {user.email === userData.email && (
-                            <span className="text-gray-500 dark:text-gray-400 italic">You</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <UserTable
+                users={allUsers}
+                currentUserEmail={userData.email}
+                onRoleChange={handleRoleChange}
+              />
             </motion.div>
           )}
 
@@ -416,26 +272,7 @@ const AdminDashboard = ({ userData }) => {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">All Books</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {allBooks.map((book) => (
-                    <div
-                      key={book._id}
-                      className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                    >
-                      <img
-                        src={book.cover_photo}
-                        alt={book.book_title}
-                        className="w-full h-48 object-cover rounded-lg mb-3"
-                      />
-                      <h3 className="font-bold text-gray-900 dark:text-white line-clamp-2 mb-1">
-                        {book.book_title}
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">by {book.book_author}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs bg-bgBtn/10 text-bgBtn px-2 py-1 rounded-full font-semibold">
-                          {book.book_category}
-                        </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">{book.upvote || 0} ⬆</span>
-                      </div>
-                    </div>
+                    <BookCard key={book._id} book={book} />
                   ))}
                 </div>
               </div>
@@ -450,23 +287,17 @@ const AdminDashboard = ({ userData }) => {
               className="space-y-6"
             >
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white dark:bg-darkBase-secondary rounded-2xl p-6 shadow-lg">
-                  <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Category Distribution</h3>
-                  <div className="h-80">
-                    <Bar 
-                      data={categoryChartData} 
-                      options={{ 
-                        maintainAspectRatio: false, 
-                        responsive: true,
-                        plugins: {
-                          legend: {
-                            display: false
-                          }
-                        }
-                      }} 
-                    />
-                  </div>
-                </div>
+                <ChartCard
+                  title="Category Distribution"
+                  type="bar"
+                  data={categoryChartData}
+                  options={{
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                  }}
+                  height="h-80"
+                />
 
                 <div className="bg-white dark:bg-darkBase-secondary rounded-2xl p-6 shadow-lg">
                   <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Platform Statistics</h3>

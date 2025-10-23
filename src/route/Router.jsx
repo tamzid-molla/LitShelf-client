@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import Root from "../root/Root";
+import DashboardLayout from "../root/DashboardLayout";
 import Home from "../pages/Home";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
@@ -63,12 +64,6 @@ const router = createBrowserRouter([
                 </PrivateRoute>
             },
             {
-                path: '/dashboard',
-                element: <PrivateRoute>
-                    <Dashboard></Dashboard>
-                </PrivateRoute>
-            },
-            {
                 path: '/updateBook/:id',
                 Component: UpdateBook
             },
@@ -79,6 +74,18 @@ const router = createBrowserRouter([
             {
                 path: "*",
                 Component: ErrorPage
+            }
+        ]
+    },
+    {
+        path: "/dashboard",
+        element: <PrivateRoute>
+            <DashboardLayout />
+        </PrivateRoute>,
+        children: [
+            {
+                index: true,
+                Component: Dashboard
             }
         ]
     }

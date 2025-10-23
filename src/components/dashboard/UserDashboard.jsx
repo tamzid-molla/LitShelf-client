@@ -6,20 +6,21 @@ import {
   FaChartLine, 
   FaBookReader,
   FaUser,
-  FaBars,
-  FaTimes,
-  FaBookOpen,
-  FaCheckCircle,
-  FaClock,
-  FaHeart
+  FaCheckCircle
 } from "react-icons/fa";
 import { AuthContext } from "../../context/FirebaseContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import axios from "axios";
-import CountUp from "react-countup";
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { Doughnut, Line } from 'react-chartjs-2';
 import { Link } from "react-router";
+
+// Import small components
+import StatsCard from "./StatsCard";
+import DashboardSidebar from "./DashboardSidebar";
+import MobileMenuButton from "./MobileMenuButton";
+import DashboardHeader from "./DashboardHeader";
+import ChartCard from "./ChartCard";
+import BookCard from "./BookCard";
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
@@ -103,68 +104,36 @@ const UserDashboard = ({ userData }) => {
 
   const menuItems = [
     { id: "overview", label: "Overview", icon: FaChartLine },
-    { id: "myBooks", label: "My Books", icon: FaBookOpen },
+    { id: "myBooks", label: "My Books", icon: FaBook },
     { id: "reviews", label: "My Reviews", icon: FaStar },
     { id: "profile", label: "Profile", icon: FaUser },
   ];
 
   return (
-    <div className="min-h-screen bg-base dark:bg-darkBase pt-24 pb-10">
+    <div className="min-h-screen bg-base dark:bg-darkBase pt-20 pb-10">
       <div className="flex">
         {/* Sidebar */}
         <motion.aside
           initial={{ x: -300 }}
           animate={{ x: sidebarOpen || window.innerWidth >= 1024 ? 0 : -300 }}
-          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white dark:bg-darkBase-secondary shadow-2xl transform transition-transform duration-300 ease-in-out pt-24 lg:pt-24`}
+          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white dark:bg-darkBase-secondary shadow-2xl transform transition-transform duration-300 ease-in-out pt-20 lg:pt-20`}
         >
-          <div className="flex flex-col h-full">
-            {/* Profile Section */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <img
-                    src={user?.photoURL || "https://via.placeholder.com/150"}
-                    alt={user?.displayName}
-                    className="w-16 h-16 rounded-full object-cover ring-4 ring-bgBtn"
-                  />
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-darkBase-secondary"></div>
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 dark:text-white">{user?.displayName}</h3>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Book Enthusiast</p>
-                </div>
-              </div>
-            </div>
+          <DashboardSidebar
+            userData={{ ...userData, name: user?.displayName, photoURL: user?.photoURL }}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setSidebarOpen={setSidebarOpen}
+            menuItems={menuItems}
+            userRole="Book Enthusiast"
+          />
 
-            {/* Navigation */}
-            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id);
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                    activeTab === item.id
-                      ? "bg-gradient-to-r from-bgBtn to-bgBtn/80 text-white shadow-lg"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  }`}
-                >
-                  <item.icon className="text-xl" />
-                  <span className="font-semibold">{item.label}</span>
-                </button>
-              ))}
-            </nav>
-
-            {/* Quick Actions */}
-            <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-              <Link to="/addBook">
-                <button className="w-full bg-gradient-to-r from-bgBtn to-bgBtn/80 hover:from-hoverBtn hover:to-hoverBtn text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-                  + Add New Book
-                </button>
-              </Link>
-            </div>
+          {/* Quick Actions */}
+          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+            <Link to="/addBook">
+              <button className="w-full bg-gradient-to-r from-bgBtn to-bgBtn/80 hover:from-hoverBtn hover:to-hoverBtn text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+                + Add New Book
+              </button>
+            </Link>
           </div>
         </motion.aside>
 
@@ -178,23 +147,12 @@ const UserDashboard = ({ userData }) => {
 
         {/* Main Content */}
         <main className="flex-1 px-4 lg:px-8">
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden fixed bottom-6 right-6 z-50 bg-bgBtn text-white p-4 rounded-full shadow-2xl hover:bg-hoverBtn transition-all"
-          >
-            {sidebarOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-          </button>
+          <MobileMenuButton sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-2">
-              Welcome back, {user?.displayName?.split(' ')[0]}! 👋
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Track your reading journey and discover new books
-            </p>
-          </div>
+          <DashboardHeader 
+            title={`Welcome back, ${user?.displayName?.split(' ')[0]}! 👋`}
+            subtitle="Track your reading journey and discover new books" 
+          />
 
           {/* Overview Tab */}
           {activeTab === "overview" && (
@@ -205,76 +163,44 @@ const UserDashboard = ({ userData }) => {
             >
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="relative bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl p-6 text-white shadow-xl overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12"></div>
-                  <div className="relative">
-                    <FaBook className="text-3xl mb-3 opacity-80" />
-                    <p className="text-blue-100 text-sm font-medium mb-1">Total Books</p>
-                    <h3 className="text-3xl font-black">
-                      <CountUp end={readingStats.total} duration={2} />
-                    </h3>
-                  </div>
-                </div>
-
-                <div className="relative bg-gradient-to-br from-green-500 to-green-700 rounded-2xl p-6 text-white shadow-xl overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12"></div>
-                  <div className="relative">
-                    <FaCheckCircle className="text-3xl mb-3 opacity-80" />
-                    <p className="text-green-100 text-sm font-medium mb-1">Finished</p>
-                    <h3 className="text-3xl font-black">
-                      <CountUp end={readingStats.finished} duration={2} />
-                    </h3>
-                  </div>
-                </div>
-
-                <div className="relative bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl p-6 text-white shadow-xl overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12"></div>
-                  <div className="relative">
-                    <FaBookReader className="text-3xl mb-3 opacity-80" />
-                    <p className="text-purple-100 text-sm font-medium mb-1">Currently Reading</p>
-                    <h3 className="text-3xl font-black">
-                      <CountUp end={readingStats.currentlyReading} duration={2} />
-                    </h3>
-                  </div>
-                </div>
-
-                <div className="relative bg-gradient-to-br from-orange-500 to-orange-700 rounded-2xl p-6 text-white shadow-xl overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12"></div>
-                  <div className="relative">
-                    <FaStar className="text-3xl mb-3 opacity-80" />
-                    <p className="text-orange-100 text-sm font-medium mb-1">Reviews</p>
-                    <h3 className="text-3xl font-black">
-                      <CountUp end={myReviews.length} duration={2} />
-                    </h3>
-                  </div>
-                </div>
+                <StatsCard
+                  title="Total Books"
+                  value={readingStats.total}
+                  icon={FaBook}
+                  gradient="from-blue-500 to-blue-700"
+                />
+                <StatsCard
+                  title="Finished"
+                  value={readingStats.finished}
+                  icon={FaCheckCircle}
+                  gradient="from-green-500 to-green-700"
+                />
+                <StatsCard
+                  title="Currently Reading"
+                  value={readingStats.currentlyReading}
+                  icon={FaBookReader}
+                  gradient="from-purple-500 to-purple-700"
+                />
+                <StatsCard
+                  title="Reviews"
+                  value={myReviews.length}
+                  icon={FaStar}
+                  gradient="from-orange-500 to-orange-700"
+                />
               </div>
 
               {/* Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white dark:bg-darkBase-secondary rounded-2xl p-6 shadow-lg">
-                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                    Reading Status
-                  </h3>
-                  <div className="h-64 flex items-center justify-center">
-                    {readingStats.total > 0 ? (
-                      <Doughnut 
-                        data={readingStatusData} 
-                        options={{ 
-                          maintainAspectRatio: false, 
-                          responsive: true,
-                          plugins: {
-                            legend: {
-                              position: 'bottom'
-                            }
-                          }
-                        }} 
-                      />
-                    ) : (
-                      <p className="text-gray-500 dark:text-gray-400">No books added yet</p>
-                    )}
-                  </div>
-                </div>
+                <ChartCard
+                  title="Reading Status"
+                  type="doughnut"
+                  data={readingStatusData}
+                  options={{
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                  }}
+                />
 
                 <div className="bg-white dark:bg-darkBase-secondary rounded-2xl p-6 shadow-lg">
                   <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
@@ -379,25 +305,7 @@ const UserDashboard = ({ userData }) => {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Books Collection</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {myBooks.map((book) => (
-                    <Link to={`/books/${book._id}`} key={book._id}>
-                      <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <img
-                          src={book.cover_photo}
-                          alt={book.book_title}
-                          className="w-full h-56 object-cover rounded-lg mb-3"
-                        />
-                        <h3 className="font-bold text-gray-900 dark:text-white line-clamp-2 mb-1">
-                          {book.book_title}
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">by {book.book_author}</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs bg-bgBtn/10 text-bgBtn px-2 py-1 rounded-full font-semibold">
-                            {book.book_category}
-                          </span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">{book.total_page} pages</span>
-                        </div>
-                      </div>
-                    </Link>
+                    <BookCard key={book._id} book={book} showUpvotes={false} />
                   ))}
                 </div>
               </div>
