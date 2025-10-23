@@ -5,7 +5,10 @@ import {
   FaChartLine, 
   FaBookReader,
   FaUser,
-  FaCheckCircle
+  FaCheckCircle,
+  FaPlus,
+  FaBookOpen,
+  FaUserCircle
 } from "react-icons/fa";
 import { AuthContext } from "../../context/FirebaseContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -108,6 +111,12 @@ const UserDashboard = ({ userData }) => {
     { id: "profile", label: "Profile", icon: FaUser },
   ];
 
+  const quickActions = [
+    { to: "/addBook", label: "Add Book", icon: FaPlus },
+    { to: "/myBooks", label: "My Books", icon: FaBookOpen },
+    { to: "/profile", label: "Profile", icon: FaUserCircle },
+  ];
+
   return (
     <div className="min-h-screen bg-base dark:bg-darkBase pt-20 pb-10">
       <div className="flex h-screen overflow-hidden">
@@ -126,12 +135,16 @@ const UserDashboard = ({ userData }) => {
             userRole="Book Enthusiast"
           >
             {/* Quick Actions */}
-            <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-              <Link to="/addBook">
-                <button className="w-full bg-gradient-to-r from-bgBtn to-bgBtn/80 hover:from-hoverBtn hover:to-hoverBtn text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-                  + Add New Book
-                </button>
-              </Link>
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+              <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Quick Actions</p>
+              {quickActions.map((action) => (
+                <Link key={action.to} to={action.to}>
+                  <button className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all text-left">
+                    <action.icon className="text-lg" />
+                    <span className="font-medium">{action.label}</span>
+                  </button>
+                </Link>
+              ))}
             </div>
           </DashboardSidebar>
         </aside>

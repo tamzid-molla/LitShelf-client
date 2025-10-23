@@ -5,10 +5,14 @@ import {
   FaStar, 
   FaChartLine, 
   FaUserShield,
-  FaTachometerAlt
+  FaTachometerAlt,
+  FaPlus,
+  FaBookOpen,
+  FaUserCircle
 } from "react-icons/fa";
 import axios from "axios";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { Link } from "react-router";
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
 // Import small components
@@ -126,6 +130,12 @@ const AdminDashboard = ({ userData }) => {
     { id: "analytics", label: "Analytics", icon: FaChartLine },
   ];
 
+  const quickActions = [
+    { to: "/addBook", label: "Add Book", icon: FaPlus },
+    { to: "/myBooks", label: "My Books", icon: FaBookOpen },
+    { to: "/profile", label: "Profile", icon: FaUserCircle },
+  ];
+
   return (
     <div className="min-h-screen bg-base dark:bg-darkBase pt-20 pb-10">
       <div className="flex h-screen overflow-hidden">
@@ -142,7 +152,20 @@ const AdminDashboard = ({ userData }) => {
             setSidebarOpen={setSidebarOpen}
             menuItems={menuItems}
             userRole="Admin"
-          />
+          >
+            {/* Quick Actions */}
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+              <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Quick Actions</p>
+              {quickActions.map((action) => (
+                <Link key={action.to} to={action.to}>
+                  <button className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all text-left">
+                    <action.icon className="text-lg" />
+                    <span className="font-medium">{action.label}</span>
+                  </button>
+                </Link>
+              ))}
+            </div>
+          </DashboardSidebar>
         </aside>
 
         {/* Mobile Overlay */}
