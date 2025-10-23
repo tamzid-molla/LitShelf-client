@@ -42,6 +42,9 @@ const NavBar = () => {
       </NavLink>
       {user && (
         <>
+          <NavLink to="/dashboard" className=" hover:text-InputRing underline-offset-4">
+            Dashboard
+          </NavLink>
           <NavLink to="/addBook" className=" hover:text-InputRing underline-offset-4">
             Add Book
           </NavLink>

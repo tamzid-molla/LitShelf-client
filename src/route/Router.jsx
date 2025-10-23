@@ -8,6 +8,7 @@ import BookDetails from "../pages/BookDetails";
 import AddBook from "../pages/AddBook";
 import MyBooks from "../pages/MyBooks";
 import Profile from "../pages/Profile";
+import Dashboard from "../pages/Dashboard";
 import PrivateRoute from "../private/PrivateRoute";
 import RatingContext from "../context/RatingContext";
 import UpdateBook from "../components/myBooks/UpdateBook";
@@ -59,6 +60,12 @@ const router = createBrowserRouter([
                 path: '/profile',
                 element: <PrivateRoute>
                     <Profile></Profile>
+                </PrivateRoute>
+            },
+            {
+                path: '/dashboard',
+                element: <PrivateRoute>
+                    <Dashboard></Dashboard>
                 </PrivateRoute>
             },
             {
