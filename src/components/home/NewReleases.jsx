@@ -6,17 +6,17 @@ import BooksNotFound from "../common/BooksNotFound";
 const NewReleases = ({books}) => {
 
   return (
-    <section className="py-16 mb-28 px-10 w-11/12 mx-auto bg-base-secondary dark:bg-darkBase-secondary rounded-3xl shadow-2xl">
+    <section className="py-16 mb-28 w-11/12 mx-auto">
       <div className="text-center mb-12">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="bg-bgBtn p-3 rounded-full">
-            <FaBook className="text-2xl text-white" />
+        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
+          <div className="bg-bgBtn p-2 sm:p-3 rounded-full">
+            <FaBook className="text-xl sm:text-2xl text-white" />
           </div>
-          <h2 className="text-5xl font-black text-bgBtn">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-bgBtn">
             New Releases
           </h2>
         </div>
-        <p className="text-lg text-gray-600 dark:text-gray-300">
+        <p className="text-sm sm:text-[16px] md:text-lg text-gray-600 dark:text-gray-300">
           Discover the latest books added to our collection
         </p>
       </div>
@@ -68,7 +68,7 @@ const NewReleases = ({books}) => {
 
                 {/* View Details Button */}
                 <Link to={`/books/${book._id}`}>
-                  <button className="w-full bg-bgBtn hover:bg-hoverBtn text-textBtn font-semibold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                  <button className="w-full bg-bgBtn hover:bg-hoverBtn text-textBtn cursor-pointer font-semibold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/btn">
                     View Details
                     <FaArrowRight className="group-hover/btn:translate-x-1 transition-transform" />
                   </button>

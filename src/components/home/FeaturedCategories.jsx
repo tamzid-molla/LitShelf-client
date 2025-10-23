@@ -11,7 +11,7 @@ const FeaturedCategories = ({categories}) => {
   return (
     <section className="py-16 rounded-2xl w-11/12 my-28 mx-auto px-6 bg-base-secondary dark:bg-darkBase-secondary flex items-center justify-center">
   <div className="pb-20">
-    <h2 className="text-3xl font-extrabold text-center mb-12 tracking-tight">
+    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-center mb-12 tracking-tight">
       Explore Our Featured Categories
         </h2>
         {

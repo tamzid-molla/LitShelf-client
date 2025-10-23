@@ -7,10 +7,10 @@ const PopularBook = ({ popularBook }) => {
   return (
     <section className="my-28 w-11/12 mx-auto">
       <div className="text-center mb-12">
-        <h2 className="text-5xl font-black mb-4 text-bgBtn">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 text-bgBtn">
           Popular Books
         </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
+        <p className="text-sm sm:text-[16px] md:text-lg text-gray-600 dark:text-gray-400">
           Explore the most loved books by our community
         </p>
       </div>
@@ -69,7 +69,7 @@ const PopularBook = ({ popularBook }) => {
 
                 {/* View Details Button */}
                 <Link to={`/books/${book._id}`}>
-                  <button className="w-full bg-bgBtn hover:bg-hoverBtn text-textBtn font-semibold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                  <button className="w-full bg-bgBtn hover:bg-hoverBtn cursor-pointer text-textBtn font-semibold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group/btn">
                     View Details
                     <FaArrowRight className="group-hover/btn:translate-x-1 transition-transform" />
                   </button>

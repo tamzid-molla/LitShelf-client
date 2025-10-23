@@ -36,10 +36,10 @@ const TotalStates = ({ allReview, allBook, allUser }) => {
   return (
     <section className="w-11/12 mx-auto bg-base-secondary dark:bg-darkBase-secondary py-20 mb-28 rounded-3xl shadow-2xl">
       <div className="text-center mb-12">
-        <h2 className="text-5xl font-black mb-4 text-bgBtn">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 text-bgBtn">
           Our Community at a Glance
         </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-300">
+        <p className="text-sm sm:text-[16px] text-gray-600 md:text-lg dark:text-gray-300">
           Join thousands of readers in our growing community
         </p>
       </div>

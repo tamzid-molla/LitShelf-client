@@ -32,10 +32,10 @@ const Testimonials = () => {
   return (
     <section className="w-11/12 mx-auto my-28">
       <div className="text-center mb-12">
-        <h2 className="text-5xl font-black mb-4 text-bgBtn">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 text-bgBtn">
           What Our Readers Say
         </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
+        <p className="text-sm sm:text-[16px] md:text-lg text-gray-600 dark:text-gray-400">
           Hear from our amazing community of book lovers
         </p>
       </div>

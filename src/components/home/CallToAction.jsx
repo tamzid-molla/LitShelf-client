@@ -37,7 +37,7 @@ const CallToAction = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-6"
           >
             Ready to Start Your Reading Journey?
           </motion.h2>
@@ -46,7 +46,7 @@ const CallToAction = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-lg md:text-xl text-white/90 mb-10 max-w-3xl mx-auto"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-10 max-w-3xl mx-auto px-4"
           >
             {user
               ? 'Discover thousands of books, connect with readers, and track your reading progress all in one place.'
@@ -62,13 +62,13 @@ const CallToAction = () => {
             {!user ? (
               <>
                 <Link to="/login">
-                  <button className="group bg-white text-bgBtn font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 hover:scale-105">
+                  <button className="group bg-white text-bgBtn font-bold px-8 py-4 cursor-pointer rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 hover:scale-105">
                     Get Started Now
                     <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
                   </button>
                 </Link>
                 <Link to="/bookshelf">
-                  <button className="group bg-white/10 backdrop-blur-sm border-2 border-white text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-white/20 transition-all duration-300 flex items-center gap-3 hover:scale-105">
+                  <button className="group bg-white/10 cursor-pointer backdrop-blur-sm border-2 border-white text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-white/20 transition-all duration-300 flex items-center gap-3 hover:scale-105">
                     Browse Books
                   </button>
                 </Link>
@@ -76,13 +76,13 @@ const CallToAction = () => {
             ) : (
               <>
                 <Link to="/bookshelf">
-                  <button className="group bg-white text-bgBtn font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 hover:scale-105">
+                  <button className="group bg-white text-bgBtn cursor-pointer font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 hover:scale-105">
                     Explore Books
                     <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
                   </button>
                 </Link>
                 <Link to="/dashboard">
-                  <button className="group bg-white/10 backdrop-blur-sm border-2 border-white text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-white/20 transition-all duration-300 flex items-center gap-3 hover:scale-105">
+                  <button className="group bg-white/10 backdrop-blur-sm border-2 border-white text-white font-bold px-8 py-4 rounded-xl cursor-pointer shadow-lg hover:bg-white/20 transition-all duration-300 flex items-center gap-3 hover:scale-105">
                     My Dashboard
                   </button>
                 </Link>

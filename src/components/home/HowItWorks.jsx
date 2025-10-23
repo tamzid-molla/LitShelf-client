@@ -7,7 +7,7 @@ const HowItWorks = () => {
   return (
     <section className="bg-gray-50 dark:bg-darkBase-secondary w-11/12 mx-auto rounded-2xl py-12">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-white">
           How It Works
         </h2>
 
