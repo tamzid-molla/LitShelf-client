@@ -2,13 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import {
   FaUser,
   FaEnvelope,
-  FaLink,
   FaLock,
   FaEyeSlash,
   FaRegEye,
   FaGoogle,
+  FaCamera,
+  FaUpload,
 } from "react-icons/fa";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/FirebaseContext";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -17,6 +18,9 @@ import registerImage from "../assets/SignUp.png"
 const Register = () => {
   const [passShow, setPassShow] = useState(false);
   const [confirmPassShow, setConfirmPassShow] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const {
     registerWithEmailPass,
@@ -27,14 +31,53 @@ const Register = () => {
     logOutUser,
   } = useContext(AuthContext);
 
-  const handleRegister = (e) => {
+  // Handle image selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Upload image to ImgBB
+  const uploadImageToImgBB = async (imageFile) => {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    try {
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+        formData
+      );
+      return response.data.data.url;
+    } catch (error) {
+      console.error('Image upload failed:', error);
+      throw error;
+    }
+  };
+
+  const handleRegister = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const name = formData.get("name");
     const email = formData.get("email");
-    const photoURL = formData.get("photoURL");
     const password = formData.get("password");
     const confirmPassword = formData.get("confirmPassword");
+
+    // Check if image is selected
+    if (!selectedImage) {
+      return Swal.fire({
+        icon: "error",
+        title: "Photo Required",
+        text: "Please select a profile photo",
+      });
+    }
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).+$/;
 
@@ -62,6 +105,20 @@ const Register = () => {
         title: "Oops...",
         text: "Passwords do not match",
         footer: "Please try again",
+      });
+    }
+
+    // Upload image first
+    setUploading(true);
+    let photoURL = '';
+    try {
+      photoURL = await uploadImageToImgBB(selectedImage);
+    } catch (error) {
+      setUploading(false);
+      return Swal.fire({
+        icon: "error",
+        title: "Upload Failed",
+        text: "Failed to upload profile photo. Please try again.",
       });
     }
 
@@ -118,7 +175,10 @@ const Register = () => {
           footer: err.message,
         });
         setLoading(false);
+        setUploading(false);
         e.target.reset();
+        setSelectedImage(null);
+        setImagePreview(null);
       });
   };
 
@@ -200,6 +260,44 @@ const Register = () => {
           <div>
             <form onSubmit={handleRegister} className="space-y-4">
 
+                {/* Photo Upload */}
+              <div className="flex flex-col items-center space-y-3">
+                <div className="relative">
+                  <div 
+                    onClick={() => document.getElementById('photoInput').click()}
+                    className="w-32 h-32 rounded-full border-4 border-dashed border-bgBtn hover:border-hoverBtn cursor-pointer overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center transition-all duration-300 hover:scale-105"
+                  >
+                    {imagePreview ? (
+                      <img 
+                        src={imagePreview} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="text-center">
+                        <FaCamera className="text-4xl text-gray-400 mx-auto mb-2" />
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Click to upload</p>
+                      </div>
+                    )}
+                  </div>
+                  {imagePreview && (
+                    <div className="absolute bottom-0 right-0 bg-bgBtn text-white rounded-full p-2 shadow-lg">
+                      <FaUpload className="text-sm" />
+                    </div>
+                  )}
+                </div>
+                <input
+                  id="photoInput"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                  {selectedImage ? selectedImage.name : 'No file selected'}
+                </p>
+              </div>
+
               {/* Full Name */}
               <div className="relative">
                 <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-IconText" />
@@ -219,18 +317,6 @@ const Register = () => {
                   type="email"
                   name="email"
                   placeholder="Email"
-                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-InputRing"
-                  required
-                />
-              </div>
-
-              {/* Photo URL */}
-              <div className="relative">
-                <FaLink className="absolute left-3 top-1/2 transform -translate-y-1/2 text-IconText" />
-                <input
-                  type="url"
-                  name="photoURL"
-                  placeholder="Photo URL"
                   className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-InputRing"
                   required
                 />
@@ -277,8 +363,16 @@ const Register = () => {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-bgBtn text-white py-2 rounded-lg hover:bg-hoverBtn transition duration-200">
-                Sign Up
+                disabled={uploading}
+                className="w-full bg-bgBtn cursor-pointer text-white py-2 rounded-lg hover:bg-hoverBtn transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                {uploading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Uploading...
+                  </>
+                ) : (
+                  'Sign Up'
+                )}
               </button>
             </form>
 
@@ -291,7 +385,7 @@ const Register = () => {
 
             <button
               onClick={handleGoogleLogin}
-              className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-200 flex items-center justify-center gap-2 mt-4">
+              className="w-full bg-red-500 text-white py-2 cursor-pointer rounded-lg hover:bg-red-600 transition duration-200 flex items-center justify-center gap-2 mt-4">
               <FaGoogle />
               Sign in with Google
             </button>

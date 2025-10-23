@@ -3,7 +3,7 @@ import { AuthContext } from '../../context/FirebaseContext';
 import { useContext } from 'react';
 import { FaBook, FaUser, FaEnvelope, FaHeart } from 'react-icons/fa';
 import axios from 'axios';
-import { Navigate, useLoaderData, useNavigate, useParams } from 'react-router';
+import { Navigate, useLoaderData, useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { useState } from 'react';

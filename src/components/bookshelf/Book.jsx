@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const Book = ({ book }) => {
   const { cover_photo, book_author, book_category, book_title, upvote } = book;

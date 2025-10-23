@@ -6,7 +6,6 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Bookshelf from "../pages/Bookshelf";
 import BookDetails from "../pages/BookDetails";
-import AddBook from "../pages/AddBook";
 import MyBooks from "../pages/MyBooks";
 import Profile from "../pages/Profile";
 import Dashboard from "../pages/Dashboard";
@@ -43,12 +42,6 @@ const router = createBrowserRouter([
                     <RatingContext>
                     <BookDetails></BookDetails>
                     </RatingContext>
-                </PrivateRoute>
-            },
-            {
-                path: '/addBook',
-                element: <PrivateRoute>
-                    <AddBook></AddBook>
                 </PrivateRoute>
             },
             {

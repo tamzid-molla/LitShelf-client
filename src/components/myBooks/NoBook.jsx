@@ -6,7 +6,9 @@ const NoBook = () => {
   const navigate = useNavigate();
 
   const handleAddBook = () => {
-    navigate('/addBook');
+    navigate('/dashboard');
+    // We'll need to communicate with the dashboard to switch to the addBook tab
+    // For now, we'll just navigate to the dashboard
   };
 
   return (

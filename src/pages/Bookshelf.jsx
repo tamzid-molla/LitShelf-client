@@ -72,7 +72,7 @@ const Bookshelf = () => {
                 transition={{ duration: 0.6 }}
               >
                 <h1 className="text-5xl md:text-6xl font-black mb-4">
-                  <span className="bg-gradient-to-r from-bgBtn via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  <span className="text-bgBtn">
                     Explore Books
                   </span>
                 </h1>
@@ -87,7 +87,7 @@ const Bookshelf = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-8 bg-white dark:bg-darkBase-secondary rounded-2xl shadow-xl p-6"
+              className="mb-8 bg-white dark:bg-darkBase-secondary rounded-2xl p-6"
             >
               <div className="flex flex-col lg:flex-row gap-4 items-center">
                 {/* Search Bar */}

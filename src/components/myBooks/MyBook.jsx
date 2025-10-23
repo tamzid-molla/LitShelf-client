@@ -1,6 +1,6 @@
 import axios from "axios";
 import { FaEdit, FaTrash, FaBook } from "react-icons/fa";
-import { Link, } from "react-router";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const MyBook = ({myBook,setMyBooks}) => {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useParams } from 'react-router-dom';
 import { FaInfoCircle } from 'react-icons/fa';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loading from '../common/Loading';
