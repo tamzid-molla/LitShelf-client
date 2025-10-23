@@ -26,7 +26,7 @@ const UserReviewsTab = ({ myReviews }) => {
                 <div className="flex-1">
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{review.review}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    {new Date(review.createdAt).toLocaleDateString()}
+                    {new Date(review.created_at).toLocaleDateString()}
                   </p>
                 </div>
               </div>

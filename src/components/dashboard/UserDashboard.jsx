@@ -72,7 +72,7 @@ const UserDashboard = ({ userData }) => {
         ]);
 
         setMyBooks(booksRes.data);
-        const userReviews = reviewsRes.data.filter(r => r.user_email === user?.email);
+        const userReviews = reviewsRes.data.filter(r => r.reviewer_email === user?.email);
         setMyReviews(userReviews);
         setLoading(false);
       } catch (error) {
@@ -88,9 +88,9 @@ const UserDashboard = ({ userData }) => {
 
   // Calculate reading statistics
   const readingStats = {
-    currentlyReading: myBooks.filter(b => b.reading_status === "Currently Reading").length,
-    wantToRead: myBooks.filter(b => b.reading_status === "Want to Read").length,
-    finished: myBooks.filter(b => b.reading_status === "Finished").length,
+    currentlyReading: myBooks.filter(b => b.reading_status === "Reading").length,
+    wantToRead: myBooks.filter(b => b.reading_status === "Want-to-Read").length,
+    finished: myBooks.filter(b => b.reading_status === "Read").length,
     total: myBooks.length
   };
 
@@ -300,7 +300,7 @@ const UserDashboard = ({ userData }) => {
       <div className="flex">
         {/* Sidebar - Completely Fixed */}
         <aside
-          className={`fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-darkBase-secondary shadow-2xl transition-transform duration-300 ease-in-out pt-20 transform ${
+          className={`fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-darkBase-secondary shadow-2xl transition-transform duration-300 ease-in-out top-20 transform ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           }`}
         >
@@ -340,7 +340,7 @@ const UserDashboard = ({ userData }) => {
           <MobileMenuButton sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
           <DashboardHeader 
-            title={`Welcome back, ${user?.displayName?.split(' ')[0]}! 👋`}
+            title={`Welcome back, ${user?.displayName?.split(' ')[0]}!`}
             subtitle="Track your reading journey and discover new books" 
           />
 

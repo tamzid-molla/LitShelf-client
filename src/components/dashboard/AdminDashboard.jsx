@@ -1,19 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { 
   FaUsers, 
-  FaBook, 
-  FaStar, 
+  FaBook,  
   FaChartLine, 
-  FaUserShield,
   FaTachometerAlt,
   FaPlus,
   FaBookOpen,
   FaUser,
-  FaEdit,
-  FaTimes,
-  FaCamera,
-  FaCheckCircle,
-  FaImage,
 } from "react-icons/fa";
 import axios from "axios";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -21,16 +14,9 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/FirebaseContext";
 import Swal from "sweetalert2";
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import AddBooksForm from "../addBooks/AddBooksForm";
-
-// Import small components
-import StatsCard from "./StatsCard";
 import DashboardSidebar from "./DashboardSidebar";
 import MobileMenuButton from "./MobileMenuButton";
 import DashboardHeader from "./DashboardHeader";
-import ChartCard from "./ChartCard";
-import BookCard from "./BookCard";
-import UserTable from "./UserTable";
 
 // Import new admin components
 import AdminOverviewTab from "./admin/AdminOverviewTab";
