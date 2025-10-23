@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { 
   FaUsers, 
   FaBook, 
@@ -129,12 +128,12 @@ const AdminDashboard = ({ userData }) => {
 
   return (
     <div className="min-h-screen bg-base dark:bg-darkBase pt-20 pb-10">
-      <div className="flex">
+      <div className="flex h-screen overflow-hidden">
         {/* Sidebar */}
-        <motion.aside
-          initial={{ x: -300 }}
-          animate={{ x: sidebarOpen || window.innerWidth >= 1024 ? 0 : -300 }}
-          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white dark:bg-darkBase-secondary shadow-2xl transform transition-transform duration-300 ease-in-out pt-20 lg:pt-20`}
+        <aside
+          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white dark:bg-darkBase-secondary shadow-2xl transition-transform duration-300 ease-in-out pt-20 lg:pt-20 transform ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          }`}
         >
           <DashboardSidebar
             userData={userData}
@@ -144,7 +143,7 @@ const AdminDashboard = ({ userData }) => {
             menuItems={menuItems}
             userRole="Admin"
           />
-        </motion.aside>
+        </aside>
 
         {/* Mobile Overlay */}
         {sidebarOpen && (
@@ -155,7 +154,7 @@ const AdminDashboard = ({ userData }) => {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 px-4 lg:px-8">
+        <main className="flex-1 overflow-y-auto px-4 lg:px-8">
           <MobileMenuButton sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
           <DashboardHeader 
@@ -165,11 +164,7 @@ const AdminDashboard = ({ userData }) => {
 
           {/* Overview Tab */}
           {activeTab === "overview" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
-            >
+            <div className="space-y-6 animate-fadeIn">
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <StatsCard
@@ -239,16 +234,12 @@ const AdminDashboard = ({ userData }) => {
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {/* Users Tab */}
           {activeTab === "users" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg overflow-hidden"
-            >
+            <div className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg overflow-hidden animate-fadeIn">
               <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">User Management</h2>
                 <p className="text-gray-600 dark:text-gray-400 mt-1">Manage user roles and permissions</p>
@@ -258,16 +249,12 @@ const AdminDashboard = ({ userData }) => {
                 currentUserEmail={userData.email}
                 onRoleChange={handleRoleChange}
               />
-            </motion.div>
+            </div>
           )}
 
           {/* Books Tab */}
           {activeTab === "books" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
-            >
+            <div className="space-y-6 animate-fadeIn">
               <div className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg p-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">All Books</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -276,16 +263,12 @@ const AdminDashboard = ({ userData }) => {
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {/* Analytics Tab */}
           {activeTab === "analytics" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
-            >
+            <div className="space-y-6 animate-fadeIn">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <ChartCard
                   title="Category Distribution"
@@ -340,7 +323,7 @@ const AdminDashboard = ({ userData }) => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
         </main>
       </div>

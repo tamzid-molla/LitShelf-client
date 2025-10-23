@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import { motion } from "framer-motion";
 import { 
   FaBook, 
   FaStar, 
@@ -111,12 +110,12 @@ const UserDashboard = ({ userData }) => {
 
   return (
     <div className="min-h-screen bg-base dark:bg-darkBase pt-20 pb-10">
-      <div className="flex">
+      <div className="flex h-screen overflow-hidden">
         {/* Sidebar */}
-        <motion.aside
-          initial={{ x: -300 }}
-          animate={{ x: sidebarOpen || window.innerWidth >= 1024 ? 0 : -300 }}
-          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white dark:bg-darkBase-secondary shadow-2xl transform transition-transform duration-300 ease-in-out pt-20 lg:pt-20`}
+        <aside
+          className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white dark:bg-darkBase-secondary shadow-2xl transition-transform duration-300 ease-in-out pt-20 lg:pt-20 transform ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          }`}
         >
           <DashboardSidebar
             userData={{ ...userData, name: user?.displayName, photoURL: user?.photoURL }}
@@ -125,17 +124,17 @@ const UserDashboard = ({ userData }) => {
             setSidebarOpen={setSidebarOpen}
             menuItems={menuItems}
             userRole="Book Enthusiast"
-          />
-
-          {/* Quick Actions */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-            <Link to="/addBook">
-              <button className="w-full bg-gradient-to-r from-bgBtn to-bgBtn/80 hover:from-hoverBtn hover:to-hoverBtn text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-                + Add New Book
-              </button>
-            </Link>
-          </div>
-        </motion.aside>
+          >
+            {/* Quick Actions */}
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+              <Link to="/addBook">
+                <button className="w-full bg-gradient-to-r from-bgBtn to-bgBtn/80 hover:from-hoverBtn hover:to-hoverBtn text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+                  + Add New Book
+                </button>
+              </Link>
+            </div>
+          </DashboardSidebar>
+        </aside>
 
         {/* Mobile Overlay */}
         {sidebarOpen && (
@@ -146,7 +145,7 @@ const UserDashboard = ({ userData }) => {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 px-4 lg:px-8">
+        <main className="flex-1 overflow-y-auto px-4 lg:px-8">
           <MobileMenuButton sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
           <DashboardHeader 
@@ -156,11 +155,7 @@ const UserDashboard = ({ userData }) => {
 
           {/* Overview Tab */}
           {activeTab === "overview" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
-            >
+            <div className="space-y-6 animate-fadeIn">
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatsCard
@@ -291,16 +286,12 @@ const UserDashboard = ({ userData }) => {
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {/* My Books Tab */}
           {activeTab === "myBooks" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
-            >
+            <div className="space-y-6 animate-fadeIn">
               <div className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg p-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Books Collection</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -309,16 +300,12 @@ const UserDashboard = ({ userData }) => {
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {/* Reviews Tab */}
           {activeTab === "reviews" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg p-6"
-            >
+            <div className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg p-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Reviews</h2>
               <div className="space-y-4">
                 {myReviews.length > 0 ? (
@@ -349,18 +336,13 @@ const UserDashboard = ({ userData }) => {
                   ))
                 ) : (
                   <p className="text-center text-gray-500 dark:text-gray-400 py-10">No reviews yet. Start reviewing your books!</p>
-                )}
-              </div>
-            </motion.div>
+                )}              </div>
+            </div>
           )}
 
           {/* Profile Tab */}
           {activeTab === "profile" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg p-8"
-            >
+            <div className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg p-8 animate-fadeIn">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Profile Information</h2>
               <div className="flex flex-col items-center">
                 <img
@@ -393,7 +375,7 @@ const UserDashboard = ({ userData }) => {
                   </Link>
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
         </main>
       </div>
