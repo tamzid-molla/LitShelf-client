@@ -29,6 +29,13 @@ import DashboardHeader from "./DashboardHeader";
 import ChartCard from "./ChartCard";
 import BookCard from "./BookCard";
 
+// Import new user components
+import UserOverviewTab from "./user/UserOverviewTab";
+import UserAddBookTab from "./user/UserAddBookTab";
+import UserMyBooksTab from "./user/UserMyBooksTab";
+import UserReviewsTab from "./user/UserReviewsTab";
+import UserProfileTab from "./user/UserProfileTab";
+
 ChartJS.register(ArcElement, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
 const UserDashboard = ({ userData }) => {
@@ -339,561 +346,55 @@ const UserDashboard = ({ userData }) => {
 
           {/* Overview Tab */}
           {activeTab === "overview" && (
-            <div className="space-y-6 animate-fadeIn">
-              {/* Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatsCard
-                  title="Total Books"
-                  value={readingStats.total}
-                  icon={FaBook}
-                  gradient="from-blue-500 to-blue-700"
-                />
-                <StatsCard
-                  title="Finished"
-                  value={readingStats.finished}
-                  icon={FaCheckCircle}
-                  gradient="from-green-500 to-green-700"
-                />
-                <StatsCard
-                  title="Currently Reading"
-                  value={readingStats.currentlyReading}
-                  icon={FaBookReader}
-                  gradient="from-purple-500 to-purple-700"
-                />
-                <StatsCard
-                  title="Reviews"
-                  value={myReviews.length}
-                  icon={FaStar}
-                  gradient="from-orange-500 to-orange-700"
-                />
-              </div>
-
-              {/* Charts */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <ChartCard
-                  title="Reading Status"
-                  type="doughnut"
-                  data={readingStatusData}
-                  options={{
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    plugins: { legend: { position: 'bottom' } }
-                  }}
-                />
-
-                <div className="bg-white dark:bg-darkBase-secondary rounded-2xl p-6 shadow-lg">
-                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                    Reading Progress
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between mb-2">
-                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Books Finished</span>
-                        <span className="text-sm font-bold text-bgBtn">
-                          {readingStats.total > 0 ? Math.round((readingStats.finished / readingStats.total) * 100) : 0}%
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                        <div 
-                          className="bg-gradient-to-r from-bgBtn to-green-500 h-3 rounded-full transition-all duration-500" 
-                          style={{ width: `${readingStats.total > 0 ? (readingStats.finished / readingStats.total) * 100 : 0}%` }}
-                        ></div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between mb-2">
-                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Currently Reading</span>
-                        <span className="text-sm font-bold text-purple-600">
-                          {readingStats.total > 0 ? Math.round((readingStats.currentlyReading / readingStats.total) * 100) : 0}%
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                        <div 
-                          className="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-500" 
-                          style={{ width: `${readingStats.total > 0 ? (readingStats.currentlyReading / readingStats.total) * 100 : 0}%` }}
-                        ></div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between mb-2">
-                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Want to Read</span>
-                        <span className="text-sm font-bold text-orange-600">
-                          {readingStats.total > 0 ? Math.round((readingStats.wantToRead / readingStats.total) * 100) : 0}%
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                        <div 
-                          className="bg-gradient-to-r from-orange-500 to-orange-600 h-3 rounded-full transition-all duration-500" 
-                          style={{ width: `${readingStats.total > 0 ? (readingStats.wantToRead / readingStats.total) * 100 : 0}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Recent Books */}
-              <div className="bg-white dark:bg-darkBase-secondary rounded-2xl p-6 shadow-lg">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Recently Added</h3>
-                  <Link to="/myBooks" className="text-bgBtn hover:text-hoverBtn font-semibold text-sm">
-                    View All →
-                  </Link>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {myBooks.slice(0, 3).map((book) => (
-                    <div
-                      key={book._id}
-                      className="flex gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:shadow-lg transition-all duration-300"
-                    >
-                      <img
-                        src={book.cover_photo}
-                        alt={book.book_title}
-                        className="w-16 h-20 object-cover rounded-lg"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-gray-900 dark:text-white line-clamp-1 text-sm">
-                          {book.book_title}
-                        </h4>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{book.book_author}</p>
-                        <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
-                          book.reading_status === 'Finished' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                          book.reading_status === 'Currently Reading' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
-                          'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
-                        }`}>
-                          {book.reading_status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <UserOverviewTab 
+              readingStats={readingStats}
+              readingStatusData={readingStatusData}
+              categoryChartData={categoryChartData}
+              myBooks={myBooks}
+              myReviews={myReviews}
+            />
           )}
 
           {/* Add Book Tab */}
           {activeTab === "addBook" && (
-            <div className="animate-fadeIn">
-              <div className="bg-white dark:bg-darkBase-secondary rounded-3xl shadow-2xl overflow-hidden">
-                <div className="bg-gradient-to-r from-bgBtn to-hoverBtn p-8">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
-                      <FaPlus className="text-3xl text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-3xl font-black text-white">Add New Book</h2>
-                      <p className="text-white/90 mt-1">Share your favorite books with the community</p>
-                    </div>
-                  </div>
-                </div>
-                <AddBooksForm 
-                  handleBookSubmit={handleBookSubmit} 
-                  uploading={uploading}
-                  imagePreview={bookImagePreview}
-                  setImagePreview={setBookImagePreview}
-                />
-              </div>
-            </div>
+            <UserAddBookTab 
+              handleBookSubmit={handleBookSubmit}
+              uploading={uploading}
+              bookImagePreview={bookImagePreview}
+              setBookImagePreview={setBookImagePreview}
+            />
           )}
 
           {/* My Books Tab */}
           {activeTab === "myBooks" && (
-            <div className="space-y-6 animate-fadeIn">
-              <div className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Books Collection</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {myBooks.map((book) => (
-                    <BookCard key={book._id} book={book} showUpvotes={false} />
-                  ))}
-                </div>
-              </div>
-            </div>
+            <UserMyBooksTab myBooks={myBooks} />
           )}
 
           {/* Reviews Tab */}
           {activeTab === "reviews" && (
-            <div className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg p-6 animate-fadeIn">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Reviews</h2>
-              <div className="space-y-4">
-                {myReviews.length > 0 ? (
-                  myReviews.map((review) => (
-                    <div
-                      key={review._id}
-                      className="p-5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:shadow-lg transition-all"
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0">
-                          <div className="flex gap-1">
-                            {[...Array(5)].map((_, i) => (
-                              <FaStar
-                                key={i}
-                                className={i < review.rating ? "text-yellow-500" : "text-gray-300 dark:text-gray-600"}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{review.review}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                            {new Date(review.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center text-gray-500 dark:text-gray-400 py-10">No reviews yet. Start reviewing your books!</p>
-                )}              </div>
-            </div>
+            <UserReviewsTab myReviews={myReviews} />
           )}
 
           {/* Profile Tab */}
           {activeTab === "profile" && (
-            <>
-              <div className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-lg p-8 animate-fadeIn">
-                <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Profile Information</h2>
-                  <button
-                    onClick={() => {
-                      setProfileData({
-                        name: user?.displayName || '',
-                        email: user?.email || '',
-                        photoURL: user?.photoURL || '',
-                        phone: userData?.phone || '',
-                        location: userData?.location || '',
-                        bio: userData?.bio || '',
-                        website: userData?.website || '',
-                        favoriteGenre: userData?.favoriteGenre || '',
-                        readingGoal: userData?.readingGoal || '',
-                      });
-                      setSelectedImage(null);
-                      setImagePreview(null);
-                      setShowUpdateModal(true);
-                    }}
-                    className="flex items-center gap-2 bg-gradient-to-r from-bgBtn to-hoverBtn text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
-                  >
-                    <FaEdit /> Update Profile
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Profile Picture Section */}
-                  <div className="lg:col-span-1 flex flex-col items-center">
-                    <div className="relative group">
-                      <img
-                        src={user?.photoURL || "https://via.placeholder.com/150"}
-                        alt={user?.displayName}
-                        className="w-40 h-40 rounded-full object-cover ring-4 ring-bgBtn shadow-xl"
-                      />
-                      <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-3 ring-4 ring-white dark:ring-darkBase-secondary">
-                        <FaCheckCircle className="text-white text-xl" />
-                      </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-6 text-center">
-                      {user?.displayName}
-                    </h3>
-                    <p className="text-bgBtn font-semibold text-sm uppercase tracking-wider mt-2">
-                      Book Enthusiast
-                    </p>
-                  </div>
-
-                  {/* Profile Details Section */}
-                  <div className="lg:col-span-2 space-y-6">
-                    {/* Personal Information */}
-                    <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
-                      <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                        <FaUser className="text-bgBtn" />
-                        Personal Information
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Full Name</p>
-                          <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                            {user?.displayName || 'N/A'}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Email Address</p>
-                          <p className="text-lg font-semibold text-gray-900 dark:text-white break-all">
-                            {user?.email}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Account Statistics */}
-                    <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
-                      <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                        <FaBook className="text-bgBtn" />
-                        Reading Statistics
-                      </h4>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="text-center">
-                          <p className="text-3xl font-black text-bgBtn">{readingStats.total}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Total Books</p>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-3xl font-black text-green-600">{readingStats.finished}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Finished</p>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-3xl font-black text-purple-600">{readingStats.currentlyReading}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Reading</p>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-3xl font-black text-orange-600">{myReviews.length}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Reviews</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Account Information */}
-                    <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
-                      <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Account Details</h4>
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                          <span className="text-gray-600 dark:text-gray-400">Member Since</span>
-                          <span className="font-semibold text-gray-900 dark:text-white">
-                            {userData?.createdAt ? new Date(userData.createdAt).toLocaleDateString('en-US', { 
-                              year: 'numeric', 
-                              month: 'long', 
-                              day: 'numeric' 
-                            }) : 'N/A'}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                          <span className="text-gray-600 dark:text-gray-400">Account Type</span>
-                          <span className="font-semibold text-bgBtn capitalize">
-                            {userData?.role || 'User'}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center py-2">
-                          <span className="text-gray-600 dark:text-gray-400">Status</span>
-                          <span className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full font-semibold text-sm">
-                            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                            Active
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Update Profile Modal */}
-              {showUpdateModal && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fadeIn">
-                  <div className="bg-white dark:bg-darkBase-secondary rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-                    {/* Modal Header */}
-                    <div className="sticky top-0 bg-gradient-to-r from-bgBtn to-hoverBtn text-white p-6 rounded-t-2xl flex justify-between items-center">
-                      <h3 className="text-2xl font-bold">Update Profile</h3>
-                      <button
-                        onClick={() => setShowUpdateModal(false)}
-                        className="text-white hover:bg-white/20 p-2 rounded-full transition-all"
-                      >
-                        <FaTimes size={24} />
-                      </button>
-                    </div>
-
-                    {/* Modal Body */}
-                    <form onSubmit={handleProfileUpdate} className="p-6 space-y-6">
-                      {/* Profile Picture Upload */}
-                      <div className="flex flex-col items-center py-4 border-b border-gray-200 dark:border-gray-700">
-                        <div className="relative group">
-                          <img
-                            src={imagePreview || profileData.photoURL || "https://via.placeholder.com/150"}
-                            alt="Profile Preview"
-                            className="w-32 h-32 rounded-full object-cover ring-4 ring-bgBtn shadow-lg"
-                          />
-                          <div 
-                            onClick={() => document.getElementById('profileImageInput').click()}
-                            className="absolute inset-0 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
-                          >
-                            <div className="text-center">
-                              <FaCamera className="text-white text-2xl mx-auto mb-1" />
-                              <p className="text-white text-xs">Change Photo</p>
-                            </div>
-                          </div>
-                        </div>
-                        <input
-                          id="profileImageInput"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageChange}
-                          className="hidden"
-                        />
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">
-                          {selectedImage ? selectedImage.name : 'Click on image to upload new photo'}
-                        </p>
-                        {uploadingImage && (
-                          <div className="flex items-center gap-2 mt-2 text-bgBtn">
-                            <div className="w-4 h-4 border-2 border-bgBtn border-t-transparent rounded-full animate-spin"></div>
-                            <span className="text-sm">Uploading image...</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Two Column Layout for Fields */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Full Name */}
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            Full Name *
-                          </label>
-                          <input
-                            type="text"
-                            value={profileData.name}
-                            onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-bgBtn bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                            placeholder="Enter your full name"
-                            required
-                          />
-                        </div>
-
-                        {/* Email (Read-only) */}
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            Email Address
-                          </label>
-                          <input
-                            type="email"
-                            value={profileData.email}
-                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 cursor-not-allowed"
-                            disabled
-                          />
-                        </div>
-
-                        {/* Phone */}
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            Phone Number
-                          </label>
-                          <input
-                            type="tel"
-                            value={profileData.phone}
-                            onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-bgBtn bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                            placeholder="+1 (555) 123-4567"
-                          />
-                        </div>
-
-                        {/* Location */}
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            Location
-                          </label>
-                          <input
-                            type="text"
-                            value={profileData.location}
-                            onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-bgBtn bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                            placeholder="City, Country"
-                          />
-                        </div>
-
-                        {/* Website */}
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            Website / Social Link
-                          </label>
-                          <input
-                            type="url"
-                            value={profileData.website}
-                            onChange={(e) => setProfileData({ ...profileData, website: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-bgBtn bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                            placeholder="https://yourwebsite.com"
-                          />
-                        </div>
-
-                        {/* Favorite Genre */}
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            Favorite Genre
-                          </label>
-                          <select
-                            value={profileData.favoriteGenre}
-                            onChange={(e) => setProfileData({ ...profileData, favoriteGenre: e.target.value })}
-                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-bgBtn bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                          >
-                            <option value="">Select a genre</option>
-                            <option value="Fiction">Fiction</option>
-                            <option value="Non-Fiction">Non-Fiction</option>
-                            <option value="Mystery">Mystery</option>
-                            <option value="Thriller">Thriller</option>
-                            <option value="Romance">Romance</option>
-                            <option value="Science Fiction">Science Fiction</option>
-                            <option value="Fantasy">Fantasy</option>
-                            <option value="Biography">Biography</option>
-                            <option value="History">History</option>
-                            <option value="Self-Help">Self-Help</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Reading Goal */}
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                          Annual Reading Goal
-                        </label>
-                        <input
-                          type="number"
-                          value={profileData.readingGoal}
-                          onChange={(e) => setProfileData({ ...profileData, readingGoal: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-bgBtn bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                          placeholder="Number of books per year"
-                          min="0"
-                        />
-                      </div>
-
-                      {/* Bio */}
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                          Bio
-                        </label>
-                        <textarea
-                          value={profileData.bio}
-                          onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-bgBtn bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
-                          placeholder="Tell us about yourself and your reading preferences..."
-                          rows="4"
-                          maxLength="500"
-                        />
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
-                          {profileData.bio?.length || 0}/500 characters
-                        </p>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex gap-4 pt-4">
-                        <button
-                          type="button"
-                          onClick={() => setShowUpdateModal(false)}
-                          className="flex-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="submit"
-                          disabled={updating}
-                          className="flex-1 px-6 py-3 bg-gradient-to-r from-bgBtn to-hoverBtn text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                        >
-                          {updating ? (
-                            <>
-                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                              Updating...
-                            </>
-                          ) : (
-                            'Save Changes'
-                          )}
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              )}
-            </>
+            <UserProfileTab 
+              user={user}
+              userData={userData}
+              readingStats={readingStats}
+              myReviews={myReviews}
+              showUpdateModal={showUpdateModal}
+              setShowUpdateModal={setShowUpdateModal}
+              profileData={profileData}
+              setProfileData={setProfileData}
+              handleProfileUpdate={handleProfileUpdate}
+              selectedImage={selectedImage}
+              setSelectedImage={setSelectedImage}
+              imagePreview={imagePreview}
+              setImagePreview={setImagePreview}
+              handleImageChange={handleImageChange}
+              updating={updating}
+              uploadingImage={uploadingImage}
+            />
           )}
         </main>
       </div>

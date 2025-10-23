@@ -10,6 +10,7 @@ const Rating = ({ book_id }) => {
   const { setMyReview } = useContext(RateContext);
   const { ratings, setRatings } = useContext(RateContext);
   const axiosSecure = useAxiosSecure();
+  
   useEffect(() => {
     axiosSecure(`/rating/${book_id}`).then((data) => {
       setRatings(data.data);
@@ -24,24 +25,26 @@ const Rating = ({ book_id }) => {
 
   return (
     <div>
-      <div className="flex gap-5 items-center mb-4">
-        <h2 className="text-2xl font-semibold">Reviews</h2>
-      </div>
-      <div className="">
-        {ratings.length === 0 ? (
-          <p className="text-lg font-bold border py-5 px-2 rounded-lg">
-            No rating yet
-          </p>
-        ) : (
-          <>
-            {ratings.map((rating) => (
-              <SingleRating
-                key={rating._id}
-                SingleRating={rating}></SingleRating>
-            ))}
-          </>
-        )}
-      </div>
+      {ratings.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl p-8 max-w-md mx-auto">
+            <div className="text-5xl mb-4">📚</div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Reviews Yet</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              Be the first to share your thoughts about this book!
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {ratings.map((rating) => (
+            <SingleRating
+              key={rating._id}
+              SingleRating={rating}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
