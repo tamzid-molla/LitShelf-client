@@ -6,10 +6,9 @@ import { useEffect } from "react";
 import Loading from "../components/common/Loading";
 import NewReleases from "../components/home/NewReleases";
 import TotalStates from "../components/home/TotalStates";
-import FeaturedCategories from "../components/home/FeaturedCategories";
-import useAxiosSecure from "../hooks/useAxiosSecure";
+import Testimonials from "../components/home/Testimonials";
+import CallToAction from "../components/home/CallToAction";
 import axios from "axios";
-import HowItWorks from "../components/home/HowItWorks";
 
 const Home = () => {
   const [allUser, setAllUser] = useState(0);
@@ -17,7 +16,6 @@ const Home = () => {
   const [allBook, setAllBook] = useState(0);
     // State to track loading status for the home page
   const [homeLoading, setHomeLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
     // State to store the list of popular books
     const [popularBook, setPopularBook] = useState([]);
     //New Release book fetching 
@@ -27,9 +25,8 @@ const Home = () => {
   useEffect(() => {
   const fetchAllData = async () => {
     try {
-      const [topBooksRes,totalCategory, newReleasesRes, usersRes, booksRes, ratingsRes] = await Promise.all([
+      const [topBooksRes, newReleasesRes, usersRes, booksRes, ratingsRes] = await Promise.all([
         axios(`${import.meta.env.VITE_baseURL}/books/top`),
-        axios(`${import.meta.env.VITE_baseURL}/books/total/category`),
         axios(`${import.meta.env.VITE_baseURL}/books/recent/top`),
         axios(`${import.meta.env.VITE_baseURL}/users`),
         axios(`${import.meta.env.VITE_baseURL}/books`),
@@ -37,7 +34,6 @@ const Home = () => {
       ]);
 
       setPopularBook(topBooksRes.data);
-      setCategories(totalCategory.data);
       setBooks(newReleasesRes.data);
       setAllUser(usersRes.data.length);
       setAllBook(booksRes.data.length);
@@ -63,11 +59,11 @@ const Home = () => {
   return (
         <div className="min-h-screen pt-40">
       <Banner></Banner>
-      <HowItWorks></HowItWorks>
-            <FeaturedCategories categories={categories}></FeaturedCategories>
             <PopularBook popularBook={popularBook}></PopularBook>
             <NewReleases books={books}></NewReleases>
+            <Testimonials></Testimonials>
             <TotalStates allBook={allBook} allReview={allReview} allUser={allUser} ></TotalStates>
+            <CallToAction></CallToAction>
         </div>
   );
 };
