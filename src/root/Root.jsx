@@ -13,14 +13,14 @@ const Root = () => {
         <Loading></Loading>
       ) : (
         // Root component: main entry point for the application layout
-        <div className="bg-base max-w-[2500px] mx-auto text-black dark:bg-darkBase dark:text-darkContent">
-          <header>
+        <div className="bg-base text-black dark:bg-darkBase dark:text-darkContent">
+          <header className=" bg-navbar  dark:bg-darkNavbar py-4 w-full z-30 fixed border-b-2 border-gray-300 dark:border-gray-500">
             <NavBar></NavBar>
           </header>
-          <main>
+          <main className="max-w-[1500px] mx-auto">
             <Outlet></Outlet>
           </main>
-          <footer>
+          <footer className="bg-gray-900 text-white py-12">
             <Footer></Footer>
           </footer>
         </div>

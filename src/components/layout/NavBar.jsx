@@ -57,7 +57,7 @@ const NavBar = () => {
   );
   return (
     <>
-      <nav className="bg-navbar dark:bg-darkNavbar py-4 w-full z-30 fixed border-b-2 border-gray-300 dark:border-gray-500">
+      <nav className="max-w-[1500px] mx-auto">
         {/* Navbar section */}
         <section className="flex justify-between items-center w-11/12 mx-auto">
           {/* Logo and name  */}
