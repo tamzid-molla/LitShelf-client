@@ -74,10 +74,15 @@ const UserDashboard = ({ userData }) => {
     favoriteGenre: userData?.favoriteGenre || "",
     readingGoal: userData?.readingGoal || "",
   });
+  const [userSubscriptionData, setUserSubscriptionData] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        // Fetch user data to get books_added field
+        const userRes = await axiosSecure.get(`/users/${user?.email}`);
+        setUserSubscriptionData(userRes.data);
+
         const [booksRes, reviewsRes] = await Promise.all([
           axiosSecure.get(`/books/email?email=${user?.email}`),
           axios.get(`${import.meta.env.VITE_baseURL}/ratings`),
@@ -245,18 +250,45 @@ const UserDashboard = ({ userData }) => {
   const [uploading, setUploading] = useState(false);
   const [bookImagePreview, setBookImagePreview] = useState(null);
 
+  // Function to check if user has reached the book limit
+  const checkBookLimit = (currentBookCount, userData) => {
+    if (userData?.books_added === "Unlimited") {
+      return false; // User has unlimited books
+    } else {
+      const limit = typeof userData?.books_added === "number" ? userData.books_added : 1;
+      return currentBookCount >= limit;
+    }
+  };
+
   // Handle book submit
   const handleBookSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if user has reached the limit
-    if (myBooks.length >= 1) {
-      Swal.fire({
-        icon: "error",
-        title: "Limit Reached!",
-        text: "You can only add 1 free book. Upgrade to a subscription plan to add more books.",
-      });
-      return;
+    // Check if user has reached the limit based on their subscription
+    if (userSubscriptionData) {
+      if (userSubscriptionData.books_added === "Unlimited") {
+        // User has unlimited books, proceed with submission
+      } else {
+        const limit = typeof userSubscriptionData.books_added === "number" ? userSubscriptionData.books_added : 1;
+        if (myBooks.length >= limit) {
+          Swal.fire({
+            icon: "error",
+            title: "Limit Reached!",
+            text: `You can only add ${limit} book(s). Upgrade to a subscription plan to add more books.`,
+          });
+          return;
+        }
+      }
+    } else {
+      // If no subscription data, default to 1 book limit
+      if (myBooks.length >= 1) {
+        Swal.fire({
+          icon: "error",
+          title: "Limit Reached!",
+          text: "You can only add 1 free book. Upgrade to a subscription plan to add more books.",
+        });
+        return;
+      }
     }
 
     setUploading(true);
@@ -307,60 +339,130 @@ const UserDashboard = ({ userData }) => {
 
   // Render the Add Book tab with limit check
   const renderAddBookTab = () => {
-    if (myBooks.length >= 1) {
-      return (
-        <div className="animate-fadeIn">
-          <div className="bg-white dark:bg-darkBase-secondary rounded-3xl shadow-2xl overflow-hidden">
-            <div className="bg-gradient-to-r from-bgBtn to-hoverBtn p-8">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
-                  <FaBook className="text-3xl text-white" />
-                </div>
-                <div>
-                  <h2 className="text-3xl font-black text-white">Book Limit Reached</h2>
-                  <p className="text-white/90 mt-1">You've already added your free book to your library</p>
+    if (userSubscriptionData) {
+      const hasReachedLimit = checkBookLimit(myBooks.length, userSubscriptionData);
+      const limit =
+        userSubscriptionData?.books_added === "Unlimited"
+          ? "Unlimited"
+          : typeof userSubscriptionData?.books_added === "number"
+          ? userSubscriptionData.books_added
+          : 1;
+
+      if (hasReachedLimit) {
+        return (
+          <div className="animate-fadeIn">
+            <div className="bg-white dark:bg-darkBase-secondary rounded-3xl shadow-2xl overflow-hidden">
+              <div className="bg-gradient-to-r from-bgBtn to-hoverBtn p-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <FaBook className="text-3xl text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-black text-white">Book Limit Reached</h2>
+                    <p className="text-white/90 mt-1">You've already added your {limit} book(s) to your library</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="p-8 md:p-12 text-center">
-              <div className="max-w-2xl mx-auto">
-                <div className="text-5xl text-amber-500 mb-6">⚠️</div>
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                  You've Reached Your Free Book Limit
-                </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-                  As a free user, you can only add 1 book to your library. To add more books, please upgrade to a
-                  subscription plan.
-                </p>
+              <div className="p-8 md:p-12 text-center">
+                <div className="max-w-2xl mx-auto">
+                  <div className="text-5xl text-amber-500 mb-6">⚠️</div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                    You've Reached Your Book Limit
+                  </h2>
+                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+                    {userSubscriptionData?.books_added === "Unlimited"
+                      ? "You have unlimited books but there seems to be an issue."
+                      : `As a ${
+                          userSubscriptionData?.role || "free"
+                        } user, you can only add ${limit} book(s) to your library. To add more books, please upgrade to a subscription plan.`}
+                  </p>
 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button
-                    onClick={() => navigate("/subscribe")}
-                    className="px-8 py-4 bg-gradient-to-r from-bgBtn to-hoverBtn hover:from-hoverBtn hover:to-bgBtn text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2">
-                    <span>Upgrade to Subscribe</span>
-                    <FaArrowRight />
-                  </button>
-                  <Link
-                    to="/myBooks"
-                    className="px-8 py-4 border-2 border-bgBtn text-bgBtn dark:text-bgBtn hover:bg-bgBtn/10 dark:hover:bg-bgBtn/10 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2">
-                    <span>View My Books</span>
-                    <FaBookOpen />
-                  </Link>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      onClick={() => navigate("/subscribe")}
+                      className="px-8 py-4 bg-gradient-to-r from-bgBtn to-hoverBtn hover:from-hoverBtn hover:to-bgBtn text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2">
+                      <span>Upgrade to Subscribe</span>
+                      <FaArrowRight />
+                    </button>
+                    <Link
+                      to="/myBooks"
+                      className="px-8 py-4 border-2 border-bgBtn text-bgBtn dark:text-bgBtn hover:bg-bgBtn/10 dark:hover:bg-bgBtn/10 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2">
+                      <span>View My Books</span>
+                      <FaBookOpen />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      );
+        );
+      } else {
+        return (
+          <UserAddBookTab
+            handleBookSubmit={handleBookSubmit}
+            uploading={uploading}
+            bookImagePreview={bookImagePreview}
+            setBookImagePreview={setBookImagePreview}
+          />
+        );
+      }
     } else {
-      return (
-        <UserAddBookTab
-          handleBookSubmit={handleBookSubmit}
-          uploading={uploading}
-          bookImagePreview={bookImagePreview}
-          setBookImagePreview={setBookImagePreview}
-        />
-      );
+      // Default to old behavior if user subscription data is not loaded yet
+      if (myBooks.length >= 1) {
+        return (
+          <div className="animate-fadeIn">
+            <div className="bg-white dark:bg-darkBase-secondary rounded-3xl shadow-2xl overflow-hidden">
+              <div className="bg-gradient-to-r from-bgBtn to-hoverBtn p-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <FaBook className="text-3xl text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-black text-white">Book Limit Reached</h2>
+                    <p className="text-white/90 mt-1">You've already added your free book to your library</p>
+                  </div>
+                </div>
+              </div>
+              <div className="p-8 md:p-12 text-center">
+                <div className="max-w-2xl mx-auto">
+                  <div className="text-5xl text-amber-500 mb-6">⚠️</div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                    You've Reached Your Free Book Limit
+                  </h2>
+                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+                    As a free user, you can only add 1 book to your library. To add more books, please upgrade to a
+                    subscription plan.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      onClick={() => navigate("/subscribe")}
+                      className="px-8 py-4 bg-gradient-to-r from-bgBtn to-hoverBtn hover:from-hoverBtn hover:to-bgBtn text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2">
+                      <span>Upgrade to Subscribe</span>
+                      <FaArrowRight />
+                    </button>
+                    <Link
+                      to="/myBooks"
+                      className="px-8 py-4 border-2 border-bgBtn text-bgBtn dark:text-bgBtn hover:bg-bgBtn/10 dark:hover:bg-bgBtn/10 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2">
+                      <span>View My Books</span>
+                      <FaBookOpen />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      } else {
+        return (
+          <UserAddBookTab
+            handleBookSubmit={handleBookSubmit}
+            uploading={uploading}
+            bookImagePreview={bookImagePreview}
+            setBookImagePreview={setBookImagePreview}
+          />
+        );
+      }
     }
   };
 

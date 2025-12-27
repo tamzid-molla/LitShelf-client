@@ -14,10 +14,24 @@ const AddBook = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [userBooks, setUserBooks] = useState([]);
   const [hasReachedLimit, setHasReachedLimit] = useState(false);
+  const [userSubscriptionData, setUserSubscriptionData] = useState(null);
 
   useEffect(() => {
     document.title = "LitShelf || AddBook";
   }, []);
+
+  // Fetch user subscription data
+  useEffect(() => {
+    if (user?.email) {
+      axiosSecure(`/users/${user.email}`)
+        .then((response) => {
+          setUserSubscriptionData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [user, axiosSecure]);
 
   // Check if user has already added a book
   useEffect(() => {
@@ -25,29 +39,56 @@ const AddBook = () => {
       axiosSecure(`/books/email?email=${user.email}`)
         .then((response) => {
           setUserBooks(response.data);
-          // If user already has 1 or more books, set the limit reached flag
-          if (response.data.length >= 1) {
-            setHasReachedLimit(true);
+          // Check if user has reached the book limit based on their subscription
+          if (userSubscriptionData) {
+            checkBookLimit(response.data.length, userSubscriptionData);
           }
         })
         .catch((error) => {
           console.error("Error fetching user books:", error);
         });
     }
-  }, [user, axiosSecure]);
+  }, [user, axiosSecure, userSubscriptionData]);
+
+  // Function to check if user has reached the book limit
+  const checkBookLimit = (currentBookCount, userData) => {
+    if (userData?.books_added === "Unlimited") {
+      setHasReachedLimit(false); // User has unlimited books
+    } else {
+      const limit = typeof userData?.books_added === "number" ? userData.books_added : 1;
+      setHasReachedLimit(currentBookCount >= limit);
+    }
+  };
 
   //Handle book submit
   const handleBookSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if user has reached the limit
-    if (userBooks.length >= 1) {
-      Swal.fire({
-        icon: "error",
-        title: "Limit Reached!",
-        text: "You can only add 1 free book. Upgrade to a subscription plan to add more books.",
-      });
-      return;
+    // Check if user has reached the limit based on their subscription
+    if (userSubscriptionData) {
+      if (userSubscriptionData.books_added === "Unlimited") {
+        // User has unlimited books, proceed with submission
+      } else {
+        const limit = typeof userSubscriptionData.books_added === "number" ? userSubscriptionData.books_added : 1;
+        if (userBooks.length >= limit) {
+          Swal.fire({
+            icon: "error",
+            title: "Limit Reached!",
+            text: `You can only add ${limit} book(s). Upgrade to a subscription plan to add more books.`,
+          });
+          return;
+        }
+      }
+    } else {
+      // If no subscription data, default to 1 book limit
+      if (userBooks.length >= 1) {
+        Swal.fire({
+          icon: "error",
+          title: "Limit Reached!",
+          text: "You can only add 1 free book. Upgrade to a subscription plan to add more books.",
+        });
+        return;
+      }
     }
 
     setUploading(true);
@@ -75,7 +116,11 @@ const AddBook = () => {
       if (response.data.insertedId) {
         // Update the user books count
         setUserBooks((prev) => [...prev, response.data.insertedId]);
-        setHasReachedLimit(true);
+
+        // Update the limit status after adding a book
+        if (userSubscriptionData) {
+          checkBookLimit(userBooks.length + 1, userSubscriptionData);
+        }
 
         Swal.fire({
           icon: "success",
@@ -101,6 +146,13 @@ const AddBook = () => {
 
   // Show limit reached message if user has already added a book
   if (hasReachedLimit) {
+    const limit =
+      userSubscriptionData?.books_added === "Unlimited"
+        ? "Unlimited"
+        : typeof userSubscriptionData?.books_added === "number"
+        ? userSubscriptionData.books_added
+        : 1;
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-base via-base-secondary to-base dark:from-darkBase dark:via-darkBase-secondary dark:to-darkBase pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-6xl">
@@ -111,7 +163,7 @@ const AddBook = () => {
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4">Book Limit Reached</h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              You've already added your free book to your library
+              You've already added your {limit} book(s) to your library
             </p>
           </div>
 
@@ -120,11 +172,14 @@ const AddBook = () => {
             <div className="max-w-2xl mx-auto">
               <div className="text-5xl text-amber-500 mb-6">⚠️</div>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                You've Reached Your Free Book Limit
+                You've Reached Your Book Limit
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-                As a free user, you can only add 1 book to your library. To add more books, please upgrade to a
-                subscription plan.
+                {userSubscriptionData?.books_added === "Unlimited"
+                  ? "You have unlimited books but there seems to be an issue."
+                  : `As a ${
+                      userSubscriptionData?.role || "free"
+                    } user, you can only add ${limit} book(s) to your library. To add more books, please upgrade to a subscription plan.`}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
