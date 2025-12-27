@@ -40,6 +40,9 @@ const NavBar = () => {
       <NavLink to="/bookShelf" className="hover:text-InputRing underline-offset-4 transition-colors">
         Explore Books
       </NavLink>
+      <NavLink to="/subscribe" className="hover:text-InputRing underline-offset-4 transition-colors">
+        Subscribe
+      </NavLink>
       {user && (
         <NavLink to="/dashboard" className="hover:text-InputRing underline-offset-4 transition-colors">
           Dashboard
