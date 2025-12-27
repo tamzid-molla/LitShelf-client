@@ -2,17 +2,18 @@ import React from "react";
 import { useState } from "react";
 import Loading from "../components/common/Loading";
 import { FaCheck, FaTimes, FaBook, FaStar, FaGlobe } from "react-icons/fa";
+import useSslCommerz from "../hooks/useSslCommerz";
 
 const Subscribe = () => {
   const [loading] = useState(false);
-
+  const { initiatePayment } = useSslCommerz();
   // Subscription plans data
   const plans = [
     {
       id: 1,
       name: "Basic",
-      price: "$9.99",
-      period: "per month",
+      price: 1500,
+      period: "Indefinite",
       description: "Perfect for tracking your personal library",
       features: [
         { name: "Track up to 100 books", available: true },
@@ -29,8 +30,8 @@ const Subscribe = () => {
     {
       id: 2,
       name: "Premium",
-      price: "$19.99",
-      period: "per month",
+      price: 3000,
+      period: "Indefinite",
       description: "For active book collectors",
       features: [
         { name: "Unlimited book tracking", available: true },
@@ -47,8 +48,8 @@ const Subscribe = () => {
     {
       id: 3,
       name: "Pro",
-      price: "$29.99",
-      period: "per month",
+      price: 5000,
+      period: "Indefinite",
       description: "For serious book collectors",
       features: [
         { name: "Unlimited book tracking", available: true },
@@ -119,7 +120,7 @@ const Subscribe = () => {
                     {plan.period}
                   </span>
                 </div>
-                <p className={`mt-2 ${plan.popular ? "text-white/90" : "text-gray-600 dark:text-gray-400"}`}>
+                <p className={`${plan.popular ? "text-white/90" : "text-gray-600 dark:text-gray-400"}`}>
                   {plan.description}
                 </p>
               </div>
@@ -153,7 +154,8 @@ const Subscribe = () => {
                   plan.popular
                     ? "bg-white text-bgBtn hover:bg-gray-100 transform hover:-translate-y-1"
                     : "bg-bgBtn text-white hover:bg-hoverBtn transform hover:-translate-y-1"
-                }`}>
+                }`}
+                onClick={() => initiatePayment(plan)}>
                 Get Started
               </button>
             </div>

@@ -10,6 +10,8 @@ import MyBooks from "../pages/MyBooks";
 import Profile from "../pages/Profile";
 import Dashboard from "../pages/Dashboard";
 import Subscribe from "../pages/Subscribe";
+import PaymentSuccess from "../pages/PaymentSuccess";
+import PaymentFailure from "../pages/PaymentFailure";
 import PrivateRoute from "../private/PrivateRoute";
 import RatingContext from "../context/RatingContext";
 import UpdateBook from "../components/myBooks/UpdateBook";
@@ -72,12 +74,12 @@ const router = createBrowserRouter([
         Component: BooksCategory,
       },
       {
-        path: "/subscribe",
-        element: (
-          <PrivateRoute>
-            <Subscribe></Subscribe>
-          </PrivateRoute>
-        ),
+        path: "/payment/success",
+        Component: PaymentSuccess,
+      },
+      {
+        path: "/payment/fail",
+        Component: PaymentFailure,
       },
       {
         path: "*",
@@ -98,6 +100,14 @@ const router = createBrowserRouter([
         Component: Dashboard,
       },
     ],
+  },
+  {
+    path: "/subscribe",
+    element: (
+      <PrivateRoute>
+        <Subscribe></Subscribe>
+      </PrivateRoute>
+    ),
   },
 ]);
 

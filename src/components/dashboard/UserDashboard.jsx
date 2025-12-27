@@ -29,7 +29,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import AddBooksForm from "../addBooks/AddBooksForm";
 
@@ -53,6 +53,7 @@ ChartJS.register(ArcElement, CategoryScale, LinearScale, PointElement, LineEleme
 const UserDashboard = ({ userData }) => {
   const { user, updateUser, setUser } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [myBooks, setMyBooks] = useState([]);
@@ -333,12 +334,12 @@ const UserDashboard = ({ userData }) => {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link
-                    to="/subscribe"
+                  <button
+                    onClick={() => navigate("/subscribe")}
                     className="px-8 py-4 bg-gradient-to-r from-bgBtn to-hoverBtn hover:from-hoverBtn hover:to-bgBtn text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2">
                     <span>Upgrade to Subscribe</span>
                     <FaArrowRight />
-                  </Link>
+                  </button>
                   <Link
                     to="/myBooks"
                     className="px-8 py-4 border-2 border-bgBtn text-bgBtn dark:text-bgBtn hover:bg-bgBtn/10 dark:hover:bg-bgBtn/10 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2">
