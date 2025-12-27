@@ -1,43 +1,36 @@
 /* Google Fonts: Nunito */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 
 /* Tailwind CSS and DaisyUI configuration */
 @import "tailwindcss";
 @plugin "daisyui";
 
-
 /* Customize colors  */
-@theme{
-    --color-base: #e9ecef;
-    --color-base-secondary: #f8f9fa;
-    --color-bgBtn: #2a9d8f;
-    --color-hoverBtn: #227a70;
-    --color-textBtn: #f8f9fa;
+@theme {
+  --color-base: #e9ecef;
+  --color-base-secondary: #f8f9fa;
+  --color-bgBtn: #2a9d8f;
+  --color-hoverBtn: #227a70;
+  --color-textBtn: #f8f9fa;
 
-    /*<------------Specific section---------------->  */
-       /* NavBar */
-        --color-navbar: #FFFFFF;
-        
-        
-        /* <---------Others-------------> */
-        --color-IconText: #99a1af;
-        --color-InputRing: #2a9d8f;
+  /*<------------Specific section---------------->  */
+  /* NavBar */
+  --color-navbar: #ffffff;
 
+  /* <---------Others-------------> */
+  --color-IconText: #99a1af;
+  --color-InputRing: #2a9d8f;
 
+  /*-------------------------------------------------------------------------------------------  */
 
+  /*<------------Dark mode---------------->  */
+  --color-darkBase: #010313;
+  --color-darkBase-secondary: #101828;
+  --color-darkContent: #f8f9fa;
 
-/*-------------------------------------------------------------------------------------------  */
-
-
-
-    /*<------------Dark mode---------------->  */
-    --color-darkBase:#010313;
-    --color-darkBase-secondary: #101828;
-    --color-darkContent: #f8f9fa;
-
-    /*<------------Dark mode in Specific section---------------->  */
-      /* NavBar */
-        --color-darkNavbar: #1F2937;
+  /*<------------Dark mode in Specific section---------------->  */
+  /* NavBar */
+  --color-darkNavbar: #1f2937;
 }
 
 /* Custom variant for applying styles in dark mode using the .dark class */
@@ -45,61 +38,103 @@
 
 /* Apply Nunito font from Google Fonts to the entire application */
 body {
-    font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
 }
 
 /* Navbar links style  */
-a.active{
-    color:#2a9d8f ;
-    font-weight: bold;
-    text-decoration: underline;
+a.active {
+  color: #2a9d8f;
+  font-weight: bold;
+  text-decoration: underline;
 }
 
 /* Dashboard animations */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fadeIn {
-    animation: fadeIn 0.3s ease-out forwards;
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
 /* Scrollbar styling for dashboard */
 .scrollbar-thin {
-    scrollbar-width: thin;
+  scrollbar-width: thin;
 }
 
 .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
-    background-color: rgb(209 213 219);
+  background-color: rgb(209 213 219);
 }
 
 .scrollbar-thumb-gray-600::-webkit-scrollbar-thumb {
-    background-color: rgb(75 85 99);
+  background-color: rgb(75 85 99);
 }
 
 .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-    border-radius: 3px;
+  border-radius: 3px;
 }
 
 .dark .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: rgb(75 85 99);
+  background-color: rgb(75 85 99);
 }
 
 .light .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: rgb(209 213 219);
+  background-color: rgb(209 213 219);
+}
+
+/* Loading animations */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
