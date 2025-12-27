@@ -15,6 +15,7 @@ const Subscribe = () => {
       price: 1500,
       period: "Indefinite",
       description: "Perfect for tracking your personal library",
+      books_added: 100,
       features: [
         { name: "Track up to 100 books", available: true },
         { name: "Basic reading status updates", available: true },
@@ -33,8 +34,9 @@ const Subscribe = () => {
       price: 3000,
       period: "Indefinite",
       description: "For active book collectors",
+      books_added: 500,
       features: [
-        { name: "Unlimited book tracking", available: true },
+        { name: "Track up to 500 books", available: true },
         { name: "Advanced reading status updates", available: true },
         { name: "Detailed progress tracking", available: true },
         { name: "Advanced book categorization", available: true },
@@ -51,6 +53,7 @@ const Subscribe = () => {
       price: 5000,
       period: "Indefinite",
       description: "For serious book collectors",
+      books_added: "Unlimited",
       features: [
         { name: "Unlimited book tracking", available: true },
         { name: "Advanced reading status updates", available: true },

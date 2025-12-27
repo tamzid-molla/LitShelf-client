@@ -26,6 +26,7 @@ const useSslCommerz = () => {
         cus_name: user.displayName || "Customer",
         cus_email: user.email,
         cus_phone: user.phoneNumber || "N/A",
+        books_added: plan.books_added,
         status: "Pending",
         date: new Date().toISOString(),
       };

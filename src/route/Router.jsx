@@ -74,6 +74,14 @@ const router = createBrowserRouter([
         Component: BooksCategory,
       },
       {
+        path: "/subscribe",
+        element: (
+          <PrivateRoute>
+            <Subscribe></Subscribe>
+          </PrivateRoute>
+        ),
+      },
+      {
         path: "/payment/success",
         Component: PaymentSuccess,
       },
@@ -100,14 +108,6 @@ const router = createBrowserRouter([
         Component: Dashboard,
       },
     ],
-  },
-  {
-    path: "/subscribe",
-    element: (
-      <PrivateRoute>
-        <Subscribe></Subscribe>
-      </PrivateRoute>
-    ),
   },
 ]);
 
